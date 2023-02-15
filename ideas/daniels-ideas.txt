@@ -1,0 +1,33 @@
+Recipe Web App
+    - Search recipes using a recipe api
+    - Have filtering options based on ingridients avaiable
+                OR
+    - Allow user to add/save recipes
+    - User can search through their own saved recipes
+    - User authentication
+
+Journaling/Diary Web App
+    - User authentication
+    - Can write a paragraph about their day/week/month (date and time information is saved)
+    - Use a writing prompt api to suggest prompts for user
+    - (OPTIONAL) Have user create their own prompts and share them with other users
+
+Trivia Game Web App
+    - Trivia api
+    - Categories
+    - Scoring system and tracker
+    - More than one user (with or without more than one instance)
+            ADDITIONAL
+    - User can create their own set of trivia questions
+    - User authentication
+
+Taboo Card Game Web App
+    - Use online card dataset
+    - Scoring system and tracker
+        ADDITIONAL
+    - User can create their own set of taboo cards
+    - User authentication
+
+
+
+
