@@ -1,0 +1,3 @@
+- App to connect venues to small artists
+- App to resell used textbooks directly to other students
+- App to suggest outfits depending on the weather
