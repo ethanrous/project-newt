@@ -1,0 +1,5 @@
+As a user, I want to be able to save expiration dates, so that I can be reminded of when my food will expire or need to be replaced.
+
+When I add an ingredient to the fridge, as stated above, as part of the creation of that ingredient in the app, I am asked to input an expiration date on that food, I can choose to add that date right away with the date selector, or I can use the “skip” button to not add an expiration date at that time.
+
+Once I have that food in my fridge, I return to the main ingredients view to edit, add or remove the expiration date at a later time.

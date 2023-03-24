@@ -1,0 +1,2 @@
+As a user, I want the first page after logging in to show me important information as a notification first, such as impending expiration dates. The interface should cleanly show me different pages of the application, including a full list of expiration dates as well as my favorite recipes. There should be a tab for recipe recommendations and finally a tab for viewing other users fridges and recipes.
+Each tab should display an organized list of the items. The list should have a sort function and a search function to find new recipes, etc.
