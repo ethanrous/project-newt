@@ -1,0 +1,9 @@
+As a user, I want to be able to add, delete, and update items from my “Fridge” so that I can keep track of my inventory and grocery shop more efficiently.
+
+To add a new item to my “Fridge”, I start by opening the web app and navigating to the “Fridge”. I then click on the "Add Item" button and enter the item name and quantity. I can also assign an expiration date to the item if necessary.
+
+Once I have added the new item to my inventory, it will appear alongside my other items in the form of a list. As I consume items, I can update their remaining quantity.
+
+If I need to delete an item from my “Fridge”, I can select it and click on the "Delete" button. The item will then be removed from my inventory and I will no longer receive reminders about it.
+
+Overall, the ability to add and delete items from “Fridge” allows me to stay organized and makes it easier to manage my grocery shopping.

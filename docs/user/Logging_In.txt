@@ -1,0 +1,9 @@
+As a user, I want to be able to log into my account, so that I can have unique access to my inventory.
+
+I start by opening the web app and clicking on the "Login" button. I am then directed to the login page where I am prompted to enter my username and password.
+
+Once I enter my credentials, the system verifies my information and logs me into my account. If I enter incorrect information, the system should provide an error message and allow me to try again.
+
+After successfully logging in, I am redirected to my account dashboard where I can view my inventory, shared “fridges”, and view food warnings.
+
+In addition, I expect the website to remember my login credentials so that I don't have to enter them every time I want to access my account. However, I also want the option to log out of my account if I am using a shared device or want to ensure my account security.

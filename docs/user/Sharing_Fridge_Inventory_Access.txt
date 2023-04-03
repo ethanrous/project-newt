@@ -1,0 +1,8 @@
+As a user, I want to be able to grant inventory access to other users, so that I can share my inventory with my roommates.
+
+I start by opening the web app and navigating to the “Fridge” I want to share. From there, I click on the “Share” button to open the sharing options.
+I am then able to enter the email addresses of the individuals I want to share the “Fridge” with, as well as set their permissions for viewing or editing.
+
+Once I have selected the appropriate sharing settings, I can then click "Send" to notify the individuals that the “Fridge” has been shared with them. The recipients will then receive an invitation to access the shared “Fridge”.
+
+As the owner of the “Fridge”, I am able to monitor and control access to the “Fridge” by viewing the sharing settings and revoking access as necessary.

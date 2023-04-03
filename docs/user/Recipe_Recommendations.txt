@@ -1,0 +1,1 @@
+As a customer, I want to be able to enter my food preferences, so that I can easily receive recipe recommendations based on my preferences and inventory.
