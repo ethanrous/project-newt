@@ -7,17 +7,17 @@ def home():
     return render_template('home.html')
 
 @views.route('/fridges')
-def home():
+def fridges():
     return render_template('fridges.html')
 
 @views.route('/recipes')
-def home():
+def recipes():
     return render_template('recipes.html')
 
 @views.route('/settings')
-def home():
+def settings():
     return render_template('settings.html')
 
 @views.route('/notifications')
-def home():
+def notifications():
     return render_template('notifications.html')
