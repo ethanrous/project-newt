@@ -4,9 +4,283 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
     <title>MyFridge | Fridge</title>
+    <style>
+    
+        body{
+            background: #dfe9f5;
+        }
+                
+        h2{
+            text-align: center;
+            font-family: "Poppins", sans-serif;
+        }
+        .fridge-page .fridge {
+            float: left;
+            width: 40%;
+            height: 90vh;
+            margin: auto;
+            border-radius: 25px;
+            background: #FFFFFF;
+            padding: 15px; 
+            border-color: 15px black;
+            
+        }
+        .fridge-page .fridge .freezer{
+            width: 99%;
+            height: 22vh;
+            margin: auto;
+            border-radius: 25px;
+            background: #E1E1E1;
+            padding: 15px; 
+        }
+
+        .fridge-page .fridge .freezer-door{
+            width: 99%;
+            height: 22vh;
+            border-radius: 25px;
+            background: #E1E1E1;
+            padding: 15px; 
+          
+        }
+        .fridge-page .fridge .fridge-door{
+            width: 99%;
+            height: 60vh;
+            border-radius: 25px;
+            margin: auto;
+            background: #E1E1E1;
+            padding: 20px; 
+            
+        }
+
+        .fridge-page .fridge .fridge-section{
+            width: 99%;
+            height: 60vh;
+            margin: auto;
+            border-radius: 25px;
+            background: #E1E1E1;
+            padding: 20px; 
+            
+        }
+        #fridge-section{
+            color: black;
+        }
+        .addItems{
+            width: 28%;
+            float: right;
+            
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        }
+
+        button[type="submit"] {
+        background: #06618F;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+        background: #06618F;
+        
+        }   
+
+        label {
+        display: block;
+        margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+        background-color: #3e8e41;
+        }
+
+        .error {
+        color: red;
+        margin-bottom: 10px;
+        }
+        
+
+        #quantityValue{
+            width: 60%;
+            
+
+        }
+
+        #quantityType{
+            width: 38%;
+            
+        }
+
+        
+
+    </style>
 </head>
 <body>
-    <h1>FRIDGE PAGE</h1>
+    <div class="container">
+        <nav>
+            <ul>
+                <li><a href="/index.html" class="logo">
+                    <!-- <img src="/logo.png" alt=""> -->
+                    <span class="nav-item">MyFridge</span>
+                </a></li>
+                <li><a href="/index.html">
+                    <i class="fas fa-home"></i>
+                    <span class="nav-item">Home</span>
+                </a></li>
+                <li><a href="recipes.html">
+                    <i class="fas fa-solid fa-utensils"></i>
+                    <span class="nav-item">Recipes</span>
+                </a></li>
+                <li><a href="notifications.html">
+                    <i class="fas fa-solid fa-bell"></i>
+                    <span class="nav-item">Notifications</span>
+                </a></li>
+                <li><a href="calendar.html">
+                    <i class="fas fa-solid fa-calendar-days"></i>
+                    <span class="nav-item">Calendar</span>
+                </a></li>
+                <li><a href="settings.html">
+                    <i class="fas fa-solid fa-gear"></i>
+                    <span class="nav-item">Settings</span>
+                </a></li>
+                <li><a href="" class="logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="nav-item">Log Out</span>
+                </a></li>
+
+
+            </ul>
+        </nav>
+
+    </div>
+
+<section class="main">
+    <h1>FRIDGE</h1>
+    <div class="open">
+    <div class="fridge-page">
+        <div class="fridge">
+            <div class="freezer">
+                    <ul id="freezer"></ul>
+                
+            </div>
+            <br>
+            <div class="fridge-section">
+                <ul id="fridge-section"></ul>
+                
+            </div>
+        </div>
+        <div class="fridge" style="width: 30%;">
+            <div class="freezer-door">
+                <ul id="freezer-door"></ul>
+            </div>
+            <br>
+            <div class="fridge-door">
+                <ul id="fridge-door"></ul>
+            </div>
+        </div>
+        
+    </div>
+    <div class="addItems">
+        <h3>Add New Item</h3>
+        <label for="item">Item:</label>
+        <input type="text" id="item" name="item" required>
+        <br>
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantityValue" name="quantityValue" required>
+        <select id="quantityType" name="quantityType" required>
+            <option value="" disabled selected hidden>Select Quantity</option>
+            <option value=""></option>
+            <option value="Lbs">Lbs</option>
+            <option value="Oz">Oz</option>
+            <option value="L">L</option>
+            <option value="Gallon">Gallon</option>
+            <option value="mL">mL</option>
+            <option value="Dozen">Dozen</option>
+        </select>
+        <br>
+        
+        <label for="expiration-date">Expiration Date:</label>
+        <input type="date" id="expiration-date" name="expiration-date" required>
+        <br>
+        <label for="location">Location:</label>
+        <select id="location" name="location">
+            <option value="" disabled selected hidden>Select a Location</option>
+            <option value="fridge">Fridge</option>
+            <option value="fridge-door">Fridge Door</option>
+            <option value="freezer">Freezer</option>
+            <option value="freezer-door">Freezer Door</option>
+        </select>
+        <button onclick="getAddItems()" type="submit" id="submit">Add</button>
+    </div>
+    <script> 
+        function getAddItems(){
+            var item = document.getElementById('item').value;
+            var quantity = document.getElementById('quantityValue').value;
+            var quantityType = document.getElementById('quantityType').value;
+            var expirationdate = document.getElementById('expiration-date').value;
+            var location = document.getElementById('location').value;
+
+            const node = document.createElement('li');
+
+            node.innerText =  quantity + " " + quantityType + " " + item + " Expires:" + expirationdate;
+
+            if (location == "fridge"){
+                document.getElementById("fridge-section").appendChild(node)
+            }
+            if (location == "fridge-door"){
+                document.getElementById("fridge-door").appendChild(node)
+            }
+            if (location == "freezer"){
+                document.getElementById("freezer").appendChild(node)
+            }
+            if (location == "freezer-door"){
+                document.getElementById("freezer-door").appendChild(node)
+            }
+        }
+    </script>
+        
+</section>
+
+
 </body>
 </html>
