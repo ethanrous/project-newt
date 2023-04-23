@@ -18,6 +18,7 @@ def main():
     ingredients = dbobj.getIngredientsInFridge(fridgeID=fridges[0])
     dbobj.removeIngredientFromFridge(fridges[0], ingredientID=ingredients[0]['ingredientID'])
 
+    #dbobj.dropIngredents()
     data = dbobj.getIngredientDataFromName("Apple")
     data = dbobj.getIngredientDataFromName("Bapple")
 main()

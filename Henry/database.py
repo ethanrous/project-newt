@@ -1,7 +1,14 @@
-import pymongo
 import datetime
+import os
 import random
 import string
+
+import dotenv
+import pymongo
+import requests
+
+dotenv.load_dotenv()
+
 
 # Schema:
 """     {                                    """
@@ -135,10 +142,41 @@ class newtdb:
     ###################
 
     def getIngredientDataFromName(self, ingredientName):
+
         ingredientData = self.ingredientscol.find_one( { "aliases": ingredientName } )
+
         if ingredientData == None:
+
+            foodApiUrl = "https://nutrition-by-api-ninjas.p.rapidapi.com/v1/nutrition"
+            foodApiHeaders = {
+                "X-RapidAPI-Key": os.getenv('apiKey'),
+                "X-RapidAPI-Host": "nutrition-by-api-ninjas.p.rapidapi.com"
+            }
+
             # Get food data from api
-            apiIngredientData = fakeFoodApi(ingredientName)
+            querystring = {"query": ingredientName}
+
+            print(f"Calling food API for {ingredientName}")
+            res = requests.request("GET", foodApiUrl, headers=foodApiHeaders, params=querystring).json()
+
+            if res == []:
+                print(f"Adding {ingredientName} to aliases for NO-RES")
+
+                if not self.ingredientscol.find_one( { "name": "NO-RES" } ):
+                    newIngredientData = {
+                        "name": "NO-RES",
+                        "aliases": [],
+                        "nutrition": None
+                    }
+                    self.ingredientscol.insert_one(newIngredientData)
+
+                self.ingredientscol.update_one(
+                    { "name": "NO-RES" },
+                    { "$push": { "aliases": ingredientName } }
+                )
+                return []
+
+            apiIngredientData = res[0]
             apiIngredientName = apiIngredientData['name']
 
             del apiIngredientData['name']
@@ -158,11 +196,18 @@ class newtdb:
                 }
                 self.ingredientscol.insert_one(newIngredientData)
             ingredientData = apiIngredientData
+            cleanIngredientName = apiIngredientName
+
+        elif ingredientData['name'] == "NO_RES":
+            cleanIngredientName = None
+            ingredientData = []
+
         else:
             print(f"Found {ingredientName} in cache with name {ingredientData['name']}")
+            cleanIngredientName = ingredientData['name']
             ingredientData = ingredientData['nutrition']
 
-        return ingredientData
+        return cleanIngredientName, ingredientData
 
     # CAUTION - THIS DELETES ALL INGREDIENTS IN THE DATABASE
     def dropIngredents(self):
@@ -171,16 +216,6 @@ class newtdb:
 
 
 
-def fakeFoodApi(foodName):
-    print("API CALLED")
-    appleData = {
-        "name": "Apple",
-        "calories": 2,
-        "fiber": 100,
-    }
-    if foodName == "Apple":
-        return appleData
-    elif foodName == "Bapple":
-        return appleData
-    else:
-        return None
+## TODO ##
+# Does user ID own fridge
+# Leave shared fridge
