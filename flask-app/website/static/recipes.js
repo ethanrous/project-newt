@@ -1,3 +1,5 @@
+//import { recipe_key } from "./config.js"
+
 function buildRecipe(recipeObj){
     let imgUrl = recipeObj.image
     let nameStr = recipeObj.label
@@ -99,7 +101,7 @@ async function fetchRecipes(){
         method: 'GET',
         headers: {
             'content-type': 'application/octet-stream',
-            'X-RapidAPI-Key': 'ec1def6b92msh43ec1a884e96222p1d55f1jsn7f4404c797a7',
+            'X-RapidAPI-Key': "",
             'X-RapidAPI-Host': 'edamam-recipe-search.p.rapidapi.com'
         }
     };
