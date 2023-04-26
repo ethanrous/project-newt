@@ -34,7 +34,12 @@ def settings():
 def notifications():
     return render_template('notifications.html')
 
-@views.route("/recipes")
+@views.route("/recipes", methods=['GET'])
 @login_is_required
 def recipes():
     return render_template('recipes.html')
+
+@views.route("/fetchtest", methods=['GET'])
+@login_is_required
+def fetchtest():
+    return {"some text": "it was a success!"}
