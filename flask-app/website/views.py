@@ -24,7 +24,7 @@ def protected_area():
     print(session)
     return render_template('home.html')
 
-@views.route("/settings")
-@login_is_required
-def settings():
-    return render_template('settings.html')
+# @views.route("/settings")
+# @login_is_required
+# def settings():
+#     return render_template('settings.html')
