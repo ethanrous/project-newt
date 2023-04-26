@@ -13,7 +13,7 @@ def login_is_required(function):
             return abort(401)  # Authorization required
         else:
             return function()
-
+    wrapper.__name__ = function.__name__
     return wrapper
 
 
@@ -24,7 +24,17 @@ def protected_area():
     print(session)
     return render_template('home.html')
 
-# @views.route("/settings")
-# @login_is_required
-# def settings():
-#     return render_template('settings.html')
+@views.route("/settings")
+@login_is_required
+def settings():
+    return render_template('settings.html')
+
+@views.route("/notifications")
+@login_is_required
+def notifications():
+    return render_template('notifications.html')
+
+@views.route("/recipes")
+@login_is_required
+def recipes():
+    return render_template('recipes.html')
