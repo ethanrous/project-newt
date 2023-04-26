@@ -23,3 +23,8 @@ def protected_area():
     print("**********LOOOK HERE************")
     print(session)
     return render_template('home.html')
+
+@views.route("/settings")
+@login_is_required
+def settings():
+    return render_template('settings.html')

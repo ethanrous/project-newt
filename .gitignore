@@ -1,3 +1,5 @@
 .vscode
 __pycache__
 .env
+flask-app/config.py
+flask-app/client_secret.json
