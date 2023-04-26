@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Fridge{% endblock %}
+{% block contentTitle %}Fridge{% endblock %}
+
+{% block head %}    
+    <script src="{{url_for('static', filename='fridge.js')}}"></script>
+    <link rel="stylesheet" href="../static/fridge.css">
+{% endblock %}
+
+{% block contentTop %}
+<section class="main">
+    <div class="open">
+    <div class="fridge-page">
+        <div class="fridge">
+            <div class="freezer">
+                    <ul id="freezer"></ul>
+                
+            </div>
+            <br>
+            <div class="fridge-section">
+                <ul id="fridge-section"></ul>
+                
+            </div>
+        </div>
+        <div class="fridge" style="width: 30%;">
+            <div class="freezer-door">
+                <ul id="freezer-door"></ul>
+            </div>
+            <br>
+            <div class="fridge-door">
+                <ul id="fridge-door"></ul>
+            </div>
+        </div>
+        
+    </div>
+    <div class="addItems">
+        <h3>Add New Item</h3>
+        <label for="item">Item:</label>
+        <input type="text" id="item" name="item" required>
+        <br>
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantityValue" name="quantityValue" required>
+        <select id="quantityType" name="quantityType" required>
+            <option value="" disabled selected hidden>Select Quantity</option>
+            <option value=""></option>
+            <option value="Lbs">Lbs</option>
+            <option value="Oz">Oz</option>
+            <option value="L">L</option>
+            <option value="Gallon">Gallon</option>
+            <option value="mL">mL</option>
+            <option value="Dozen">Dozen</option>
+        </select>
+        <br>
+        
+        <label for="expiration-date">Expiration Date:</label>
+        <input type="date" id="expiration-date" name="expiration-date" required>
+        <br>
+        <label for="location">Location:</label>
+        <select id="location" name="location">
+            <option value="" disabled selected hidden>Select a Location</option>
+            <option value="fridge">Fridge</option>
+            <option value="fridge-door">Fridge Door</option>
+            <option value="freezer">Freezer</option>
+            <option value="freezer-door">Freezer Door</option>
+        </select>
+        <button onclick="getAddItems()" type="submit" id="submit">Add</button>
+    </div>
+{% endblock %}
