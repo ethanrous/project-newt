@@ -9,7 +9,9 @@ from pip._vendor import cachecontrol
 import google.auth.transport.requests
 
 from flask import Blueprint, render_template, redirect, url_for, request, flash
-from . import db
+from . import dbobj
+import time
+
 
 #from .models import User
 # from flask_login import login_user, logout_user, login_required, current_user
@@ -58,6 +60,8 @@ def callback():
     cached_session = cachecontrol.CacheControl(request_session)
     token_request = google.auth.transport.requests.Request(session=cached_session)
 
+    time.sleep(2)
+
     id_info = id_token.verify_oauth2_token(
         id_token=credentials._id_token,
         request=token_request,
@@ -69,6 +73,12 @@ def callback():
     session["google_id"] = id_info.get("sub")
     session["name"] = id_info.get("name")
     session["email"] = id_info.get("email")
+
+    userExists = dbobj.userExists(userID=session['google_id'])
+    print("UserExists: ", userExists)
+    if not userExists:
+        dbobj.newUser(session["google_id"], session["name"])
+
     return redirect('/home')
 
 

@@ -2,49 +2,65 @@
 {% block title %}Dashboard{% endblock %}
 {% block contentTitle %}Dashboard{% endblock %}
 
+
+
 {% block contentTop %}
+
 <div class="row g-3 my-2">
-    <h3 class="fs-4 mb-3">My Fridges</h3>
-    <div class="col-md-3">
-        <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
-            <div>
-                <h3 class="fs-2">720</h3>
-                <p class="fs-5">Products</p>
+    <span>
+        <h3 class="fs-4 mb-3">My Fridges</h3>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Create Fridge
+        </button>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create Fridge</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="fridgeform" action="/create-fridge" method="POST">
+                        <div class="mb-3">
+                        <label for="fridge-name" class="col-form-label">Fridge Name:</label>
+                        <input type="text" name="fridge-name" class="form-control" id="fridge-name">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="fridgeform" value="Update" class="btn btn-primary">Create</button>
+                </div>
             </div>
-            <i class="fas fa-gift fs-1 primary-text border rounded-full secondary-bg p-3"></i>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
-            <div>
-                <h3 class="fs-2">4920</h3>
-                <p class="fs-5">Sales</p>
             </div>
-            <i
-                class="fas fa-hand-holding-usd fs-1 primary-text border rounded-full secondary-bg p-3"></i>
         </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
-            <div>
-                <h3 class="fs-2">3899</h3>
-                <p class="fs-5">Delivery</p>
+    </span>
+    
+    {% if fridges|length > 0%}
+        {% for fridge in fridges %}
+            <div class="col-md-3">
+                <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
+                    <div>
+                        <p class="fs-5">{{fridge.fridgeName}}</p>
+                        <a href="/fridge/?fid={{fridge._id}}" class="btn btn-primary">Open</a>
+                    </div>
+                    <i class="fa-solid fa-box-archive fs-1 primary-text border rounded-full secondary-bg p-3"></i>
+                    
+                </div>
+                
             </div>
-            <i class="fas fa-truck fs-1 primary-text border rounded-full secondary-bg p-3"></i>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
-            <div>
-                <h3 class="fs-2">%25</h3>
-                <p class="fs-5">Increase</p>
+        {% endfor %}
+    {% else %}  
+        <div class="card">
+            <div class="card-body">
+            <h5 class="card-title">No Fridges Saved!</h5>
+            <p class="card-text">Create a Fridge by clicking the button above.</p>
             </div>
-            <i class="fas fa-chart-line fs-1 primary-text border rounded-full secondary-bg p-3"></i>
-        </div>
-    </div>
+        </div> 
+    {% endif %} 
 </div>
 {% endblock %}
 
@@ -52,3 +68,4 @@
 {% block contentBottom %}
 
 {% endblock %}
+

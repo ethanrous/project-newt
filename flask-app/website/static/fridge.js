@@ -9,16 +9,16 @@ function getAddItems(){
 
     node.innerText =  quantity + " " + quantityType + " " + item + " Expires:" + expirationdate;
 
-    if (location == "fridge"){
-        document.getElementById("fridge-section").appendChild(node)
-    }
-    if (location == "fridge-door"){
-        document.getElementById("fridge-door").appendChild(node)
-    }
-    if (location == "freezer"){
-        document.getElementById("freezer").appendChild(node)
-    }
-    if (location == "freezer-door"){
-        document.getElementById("freezer-door").appendChild(node)
-    }
+    // if (location == "fridge"){
+    //     document.getElementById("fridge-section").appendChild(node)
+    // }
+    // if (location == "fridge-door"){
+    //     document.getElementById("fridge-door").appendChild(node)
+    // }
+    // if (location == "freezer"){
+    //     document.getElementById("freezer").appendChild(node)
+    // }
+    // if (location == "freezer-door"){
+    //     document.getElementById("freezer-door").appendChild(node)
+    // }
 }

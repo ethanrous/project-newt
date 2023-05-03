@@ -8,8 +8,8 @@ from pip._vendor import cachecontrol
 import google.auth.transport.requests
 
 from flask_sqlalchemy import SQLAlchemy
-
-
+import database
+dbobj = database.newtdb() 
 db = SQLAlchemy()
 DB_NAME = "database.db"
 
@@ -19,6 +19,8 @@ def create_app():
     app.config['SECRET_KEY'] = "helloworld"
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     db.init_app(app)
+
+       
 
     from .views import views
     from .auth import auth

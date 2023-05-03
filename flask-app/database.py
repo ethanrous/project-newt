@@ -66,6 +66,10 @@ class newtdb:
     def newUser(self, userID, userName):
         newUserData = {"_id": userID, "name": userName, "fridges": []}
         self.userscol.insert_one(newUserData)
+        
+
+    def userExists(self, userID):
+        return self.userscol.count_documents({"_id":userID}) > 0
 
 
     def __addFridgeToUser(self, userID, fridgeID):
@@ -94,13 +98,17 @@ class newtdb:
         self.__addFridgeToUser(ownerID, fridgeID)
         return
 
+    def getFridge(self, fridgeID):
+        fridge = self.fridgescol.find_one( { "_id": fridgeID } )
+        return fridge
+
     def __addUserToFridge(self, userID, fridgeID):
         self.fridgescol.update_one(
             {"_id": fridgeID },
             { "$push": { "collaborators": userID } }
         )
 
-    def addIngredientToFridge(self, fridgeID, ingredientName, ingredientExpirationDate, ingredientQuatity, quantityUnits):
+    def addIngredientToFridge(self, fridgeID, ingredientName, ingredientExpirationDate, ingredientQuatity, quantityUnits, location):
         while True:
             newIngredientID = random.randint(1, 1000)
             possibleCollision = self.fridgescol.aggregate( [ {"$match": { "_id": fridgeID, 'ingredients.ingredientID': newIngredientID } }, { "$unwind": { "path": "$ingredients" } } ] )
@@ -113,7 +121,8 @@ class newtdb:
             "ingredientExpirationDate": ingredientExpirationDate,
             "dateAdded": datetime.date.today().strftime("%Y-%m-%d"),
             "ingredientQuatity": ingredientQuatity,
-            "quantityUnits": quantityUnits # Count, lbs, gallons, etc.
+            "quantityUnits": quantityUnits, # Count, lbs, gallons, etc.
+            "location": location
         }
 
         self.fridgescol.update_one(

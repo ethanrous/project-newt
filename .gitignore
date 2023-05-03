@@ -3,4 +3,4 @@ flask-app/client_secret.json
 .vscode
 __pycache__
 .env
-
+flask-app/website/static/recipeKey.js
