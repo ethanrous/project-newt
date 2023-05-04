@@ -16,54 +16,15 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Pickles</td>
-                    <td>Fridge#4</td>
-                    <td>03-12-23</td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Cheese</td>
-                    <td>Fridge#2</td>
-                    <td>03-23-23</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td>Avocado</td>
-                    <td>Fridge#3</td>
-                    <td>01-02-23</td>
-                </tr>
-                <tr>
-                    <th scope="row">4</th>
-                    <td>Orange Juice</td>
-                    <td>Fridge#3</td>
-                    <td>01-29-23</td>
-                </tr>
-                <tr>
-                    <th scope="row">5</th>
-                    <td>Milk</td>
-                    <td>Fridge#4</td>
-                    <td>04-02-23</td>
-                </tr>
-                <tr>
-                    <th scope="row">6</th>
-                    <td>Butter</td>
-                    <td>Fridge#2</td>
-                    <td>01-15-23</td>
-                </tr>
-                <tr>
-                    <th scope="row">7</th>
-                    <td>Ham</td>
-                    <td>Fridge#1</td>
-                    <td>02-28-23</td>
-                </tr>
-                <tr>
-                    <th scope="row">8</th>
-                    <td>Eggs</td>
-                    <td>Fridge#1</td>
-                    <td>02-15-23</td>
-                </tr>
+
+                {% for ingridient in ingridients %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td>{{ingridient.ingredientName}}</td>
+                        <td>{{ingridient.fridgeName}}</td>
+                        <td>{{ingridient.expDate}}</td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

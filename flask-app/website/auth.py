@@ -60,7 +60,7 @@ def callback():
     cached_session = cachecontrol.CacheControl(request_session)
     token_request = google.auth.transport.requests.Request(session=cached_session)
 
-    time.sleep(2)
+    time.sleep(1)
 
     id_info = id_token.verify_oauth2_token(
         id_token=credentials._id_token,
@@ -77,7 +77,7 @@ def callback():
     userExists = dbobj.userExists(userID=session['google_id'])
     print("UserExists: ", userExists)
     if not userExists:
-        dbobj.newUser(session["google_id"], session["name"])
+        dbobj.newUser(session["google_id"], session["name"], session["email"])
 
     return redirect('/home')
 

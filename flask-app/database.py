@@ -59,17 +59,27 @@ class newtdb:
         self.__addFridgeToUser(userID=userID, fridgeID=fridgeID)
         self.__addUserToFridge(userID=userID, fridgeID=fridgeID)
 
+    def unshareFridgeWithUser(self, userID, fridgeID):
+        self.__removeFridgeFromUser(userID=userID, fridgeID=fridgeID)
+        self.__removeUserFromFridge(userID=userID, fridgeID=fridgeID)
     #############
     ### USERS ###
     #############
 
-    def newUser(self, userID, userName):
-        newUserData = {"_id": userID, "name": userName, "fridges": []}
+    def newUser(self, userID, userName, email):
+        newUserData = {"_id": userID, "name": userName, "email": email, "fridges": []}
         self.userscol.insert_one(newUserData)
         
 
     def userExists(self, userID):
         return self.userscol.count_documents({"_id":userID}) > 0
+    
+    def getUserContactByUserID(self, userID):
+        user = self.userscol.find_one({ "_id": userID })
+        name = user["name"]
+        email = user["email"]
+        contactInfo = {'name': name, 'email': email}
+        return contactInfo
 
 
     def __addFridgeToUser(self, userID, fridgeID):
@@ -78,9 +88,22 @@ class newtdb:
             { "$push": { "fridges": fridgeID } }
         )
 
+    def __removeFridgeFromUser(self, userID, fridgeID):
+        self.userscol.update_one(
+            { "_id": userID },
+            { "$pull": { "fridges": fridgeID } }
+        )
+
     def getFridgesByUserID(self, userID):
         fridges = self.userscol.find( { "_id": userID }, { "fridges": 1 } )
         return fridges[0]['fridges']
+    
+    def getUserIDFromEmail(self, email):
+        uid = self.userscol.find_one( { "email": email }, { "_id": 1 } )
+        if uid != None:
+            uid = uid['_id']
+        return uid
+    
 
     # CAUTION - THIS DELETES ALL USERS IN THE DATABASE
     def dropUsers(self):
@@ -92,6 +115,9 @@ class newtdb:
     ###############
 
     def newFridge(self, ownerID, fridgeName):
+        if not self.userExists(ownerID):
+            raise(Exception(f"Attempting to create fridge with non-existant userID: {ownerID}"))
+        
         fridgeID = ''.join(random.choices(string.ascii_uppercase + string.digits, k=7))
         newFridgeData = {"_id": fridgeID, "ownerID": ownerID, "fridgeName": fridgeName, "collaborators": [], "ingredients": [] }
         self.fridgescol.insert_one(newFridgeData)
@@ -106,6 +132,12 @@ class newtdb:
         self.fridgescol.update_one(
             {"_id": fridgeID },
             { "$push": { "collaborators": userID } }
+        )
+
+    def __removeUserFromFridge(self, userID, fridgeID):
+        self.fridgescol.update_one(
+            {"_id": fridgeID },
+            { "$pull": { "collaborators": userID } }
         )
 
     def addIngredientToFridge(self, fridgeID, ingredientName, ingredientExpirationDate, ingredientQuatity, quantityUnits, location):
@@ -140,6 +172,23 @@ class newtdb:
         fridge = self.fridgescol.find_one( { "_id": fridgeID } )
         ingredients = fridge["ingredients"]
         return ingredients
+    
+    def doesUserOwnFridge(self, fridgeID, userID):
+        fridgeOwner = self.fridgescol.find_one( { "_id": fridgeID }, { "ownerID": 1 } )
+        if fridgeOwner['ownerID'] == userID:
+            return True
+        return False
+
+    def canUserAccessFridge(self, fridgeID, userID):
+        if self.fridgescol.find_one( { "_id": fridgeID, "collaborators": userID } ):
+            return True
+        return False
+
+
+    def getFridgeCollaborators(self, fridgeID):
+        fridge = self.getFridge(fridgeID)
+        collaboratorsID = fridge["collaborators"]
+        return collaboratorsID
 
     # CAUTION - THIS DELETES ALL FRIDGES IN THE DATABASE
     def dropFridges(self):
