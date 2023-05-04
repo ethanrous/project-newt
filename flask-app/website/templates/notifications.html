@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Notifications{% endblock %}
+{% block contentTitle %}Notifications{% endblock %}
+
+{% block contentBottom %}
+<div class="row my-5">
+    <h3 class="fs-4 mb-3">Recent Orders</h3>
+    <div class="col">
+        <table class="table bg-white rounded shadow-sm  table-hover">
+            <thead>
+                <tr>
+                    <th scope="col" width="50">#</th>
+                    <th scope="col">Item</th>
+                    <th scope="col">Fridge</th>
+                    <th scope="col">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for ingridient in ingridients %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td>{{ingridient.ingredientName}}</td>
+                        <td>{{ingridient.fridgeName}}</td>
+                        <td>{{ingridient.expDate}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

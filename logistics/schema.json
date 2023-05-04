@@ -1,0 +1,22 @@
+{
+    "user":{
+        "id": "",
+        "name": "",
+        "fridges": ["ids"]
+    },
+    "fridge":{
+        "id": "",
+        "owner_id": "",
+        "collaborators":["ids"],
+        "ingridients": [{
+            "name": "",
+            "expiration_date": "",
+            "quatity": ""
+        }]
+    },
+    "ingridients": {
+        "name":"",
+        "aliases": [""],
+        "nutrition": {}
+    }
+}

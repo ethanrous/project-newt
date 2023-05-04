@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+{% block title %}Fridge{% endblock %}
+{% block contentTitle %}Fridge{% endblock %}
+
+{% block head %}    
+    <link rel="stylesheet" href="../static/fridge.css">
+{% endblock %}
+
+{% block contentTop %}
+<section class="main">
+    <div class="open">
+    <div class="fridge-page">
+        <div class="fridge">
+            <div class="freezer">
+                <div class="accordion" id="accordionFreezer">
+
+                    {% for ingredient in ingridients %}
+                    {% if ingredient.location == "freezer"%}
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading{{ingredient.ingredientID}}">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ingredient.ingredientID}}" aria-expanded="false" aria-controls="collapse{{ingredient.ingredientID}}">
+                            {{ingredient.ingredientName}} | Exp. {{ingredient.ingredientExpirationDate}}
+                          </button>
+                        </h2>
+                        <div id="collapse{{ingredient.ingredientID}}" class="accordion-collapse collapse" aria-labelledby="heading{{ingredient.ingredientID}}" data-bs-parent="#accordionExample">
+                          <div class="accordion-body">
+                            <p>Quantity: {{ingredient.ingredientQuatity}} {{ingredient.quantityUnits}}</p>
+                            <p>Calories: {{ingredient.nutrition.calories}}</p>
+                            <p>Total Fat: {{ingredient.nutrition.fat_total_g}}g</p>
+                            <p>Cholesterol: {{ingredient.nutrition.cholesterol_mg}}mg</p>
+                            <p>Sodium: {{ingredient.nutrition.sodium_mg}}mg</p>
+                            <p>Total Carbs.: {{ingredient.nutrition.carbohydrates_total_g}}g</p>
+                            <p>Protein: {{ingredient.nutrition.protein_g}}g</p>
+                          </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+
+                </div>
+                
+            </div>
+            <br>
+            <div class="fridge-section">
+                <div class="accordion" id="accordionFridge">
+
+                    {% for ingredient in ingridients %}
+                    {% if ingredient.location == "fridge"%}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading{{ingredient.ingredientID}}">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ingredient.ingredientID}}" aria-expanded="false" aria-controls="collapse{{ingredient.ingredientID}}">
+                            {{ingredient.ingredientName}} | Exp. {{ingredient.ingredientExpirationDate}}
+                          </button>
+                        </h2>
+                        <div id="collapse{{ingredient.ingredientID}}" class="accordion-collapse collapse" aria-labelledby="heading{{ingredient.ingredientID}}" data-bs-parent="#accordionExample">
+                          <div class="accordion-body">
+                            <p>Quantity: {{ingredient.ingredientQuatity}} {{ingredient.quantityUnits}}</p>
+                            <p>Calories: {{ingredient.nutrition.calories}}</p>
+                            <p>Total Fat: {{ingredient.nutrition.fat_total_g}}g</p>
+                            <p>Cholesterol: {{ingredient.nutrition.cholesterol_mg}}mg</p>
+                            <p>Sodium: {{ingredient.nutrition.sodium_mg}}mg</p>
+                            <p>Total Carbs.: {{ingredient.nutrition.carbohydrates_total_g}}g</p>
+                            <p>Protein: {{ingredient.nutrition.protein_g}}g</p>
+                          </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+
+                </div>
+                
+            </div>
+        </div>
+        <div class="fridge" style="width: 30%;">
+            <div class="freezer-door">
+                <div class="accordion" id="accordionFreezerDoor">
+
+                    {% for ingredient in ingridients %}
+                    {% if ingredient.location == "freezer-door"%}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading{{ingredient.ingredientID}}">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ingredient.ingredientID}}" aria-expanded="false" aria-controls="collapse{{ingredient.ingredientID}}">
+                            {{ingredient.ingredientName}} | Exp. {{ingredient.ingredientExpirationDate}}
+                          </button>
+                        </h2>
+                        <div id="collapse{{ingredient.ingredientID}}" class="accordion-collapse collapse" aria-labelledby="heading{{ingredient.ingredientID}}" data-bs-parent="#accordionExample">
+                          <div class="accordion-body">
+                            <p>Quantity: {{ingredient.ingredientQuatity}} {{ingredient.quantityUnits}}</p>
+                            <p>Calories: {{ingredient.nutrition.calories}}</p>
+                            <p>Total Fat: {{ingredient.nutrition.fat_total_g}}g</p>
+                            <p>Cholesterol: {{ingredient.nutrition.cholesterol_mg}}mg</p>
+                            <p>Sodium: {{ingredient.nutrition.sodium_mg}}mg</p>
+                            <p>Total Carbs.: {{ingredient.nutrition.carbohydrates_total_g}}g</p>
+                            <p>Protein: {{ingredient.nutrition.protein_g}}g</p>
+                            
+                          </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+
+                </div>
+            </div>
+            <br>
+            <div class="fridge-door">
+                <div class="accordion" id="accordionFridgeDoor">
+
+                    {% for ingredient in ingridients %}
+                    {% if ingredient.location == "fridge-door"%}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading{{ingredient.ingredientID}}">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ingredient.ingredientID}}" aria-expanded="false" aria-controls="collapse{{ingredient.ingredientID}}">
+                            {{ingredient.ingredientName}} | Exp. {{ingredient.ingredientExpirationDate}}
+                          </button>
+                        </h2>
+                        <div id="collapse{{ingredient.ingredientID}}" class="accordion-collapse collapse" aria-labelledby="heading{{ingredient.ingredientID}}" data-bs-parent="#accordionExample">
+                          <div class="accordion-body">
+                            <p>Quantity: {{ingredient.ingredientQuatity}} {{ingredient.quantityUnits}}</p>
+                            <p>Calories: {{ingredient.nutrition.calories}}</p>
+                            <p>Total Fat: {{ingredient.nutrition.fat_total_g}}g</p>
+                            <p>Cholesterol: {{ingredient.nutrition.cholesterol_mg}}mg</p>
+                            <p>Sodium: {{ingredient.nutrition.sodium_mg}}mg</p>
+                            <p>Total Carbs.: {{ingredient.nutrition.carbohydrates_total_g}}g</p>
+                            <p>Protein: {{ingredient.nutrition.protein_g}}g</p>
+                          </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div class="addItems">
+        <form action="/add-ingridient?fid={{fridge._id}}" id="ingridientform">
+            <h3>Add New Item</h3>
+
+            <label for="item">Item:</label>
+            <input type="text" id="item" name="item" class="form-control" required>
+
+            <br>
+
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantityValue" name="quantityValue" class="form-control" required>
+            <select id="quantityType" name="quantityType" required>
+                <option value="" disabled selected hidden>Select Quantity</option>
+                <option value=""></option>
+                <option value="Lbs">Lbs</option>
+                <option value="Oz">Oz</option>
+                <option value="L">L</option>
+                <option value="Gallon">Gallon</option>
+                <option value="mL">mL</option>
+                <option value="Dozen">Dozen</option>
+                <option value="Count">Count</option>
+            </select>
+
+            <br>
+            
+            <label for="expiration-date">Expiration Date:</label>
+            <input type="date" id="expiration-date" name="expiration-date" required>
+
+            <br>
+
+            <label for="location">Location:</label>
+            <select id="location" name="location">
+                <option value="" disabled selected hidden>Select a Location</option>
+                <option value="fridge">Fridge</option>
+                <option value="fridge-door">Fridge Door</option>
+                <option value="freezer">Freezer</option>
+                <option value="freezer-door">Freezer Door</option>
+            </select>
+
+            <button form="ingridientform" type="submit" id="submit">Add</button>
+
+        </form>
+
+        <br>
+
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Share Fridge
+        </button>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Share Fridge</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="shareform" action="/share-fridge" method="POST">
+                        <div class="mb-3">
+                        <label for="share-email" class="col-form-label">Enter Email:</label>
+                        <input type="text" name="share-email" class="form-control" id="share-email">
+                        </div>
+                    </form>
+                    {% if collaborators|length > 0 %}
+                    <div class="accordion" id="accordionExample">
+                      <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Collaborators
+                          </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                          <div class="accordion-body">
+                            <ul class="list-group">
+                              {% for collaborator in collaborators %}
+                                <li class="list-group-item">{{collaborator.name}} | {{collaborator.email}}</li>
+                              {% endfor %}
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="shareform" value="Update" class="btn btn-primary">Share</button>
+                </div>
+            </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div>
+
+    </div>
+{% endblock %}
+
+{% block contentBottom %}
+
+{% endblock %}
