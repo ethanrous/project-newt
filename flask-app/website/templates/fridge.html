@@ -192,7 +192,7 @@
                 <option value="freezer-door">Freezer Door</option>
             </select>
 
-            <button form="ingridientform" type="submit" id="submit">Add</button>
+            <button form="ingridientform" type="submit" id="submit" class="btn btn-primary">Add</button>
 
         </form>
 
@@ -200,12 +200,52 @@
 
         <!-- Button trigger modal -->
         {% if isOwner %}
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Share Fridge
-        </button>
+
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+            Fridge Options
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+
+            <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              Manage Collaborators
+            </button></li>
+
+            <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+              Delete Fridge
+            </button></li>
+
+          </ul>
+        </div>
+
+        
         {% endif %}
 
-        <!-- Modal -->
+
+        
+
+        <!-- Delete Fridge Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form action="" method="POST">
+                  
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Understood</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Collaborators Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -232,7 +272,12 @@
                           <div class="accordion-body">
                             <ul class="list-group">
                               {% for collaborator in collaborators %}
-                                <li class="list-group-item">{{collaborator.name}} | {{collaborator.email}}</li>
+                                <li class="list-group-item">
+                                  <form id="unshare-{{collaborator.email}}" action="/unshare-fridge/?collabEmail={{collaborator.email}}" method="POST">
+                                      {{collaborator.name}} | {{collaborator.email}}
+                                      <button type="submit" form="unshare-{{collaborator.email}}" value="Update" class="btn btn-sm btn-danger">Unshare</button>
+                                  </form>
+                                </li>
                               {% endfor %}
                             </ul>
                           </div>

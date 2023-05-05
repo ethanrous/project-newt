@@ -214,6 +214,7 @@ class newtdb:
 
         self.userscol.delete_one({ "_id": fridgeID })
 
+
     # CAUTION - THIS DELETES ALL FRIDGES IN THE DATABASE
     def dropFridges(self):
         self.fridgescol.drop()
