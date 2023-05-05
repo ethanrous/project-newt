@@ -22,7 +22,7 @@ def login_is_required(function):
 @login_is_required
 def protected_area():
     fridgeIds = dbobj.getFridgesByUserID(userID=session['google_id'])
-    fridges = [dbobj.getFridge(fridgeID=id) for id in fridgeIds]
+    fridges = [dbobj.getFridgeData(fridgeID=id) for id in fridgeIds]
     return render_template('home.html', fridges=fridges)
 
 
@@ -43,7 +43,7 @@ def settings():
 @login_is_required
 def notifications():
     fridgeIds = dbobj.getFridgesByUserID(userID=session['google_id'])
-    fridges = [dbobj.getFridge(fridgeID=id) for id in fridgeIds]
+    fridges = [dbobj.getFridgeData(fridgeID=id) for id in fridgeIds]
 
     allIngridients = []
     for fridge in fridges:
@@ -55,7 +55,7 @@ def notifications():
             finalIng['fridgeName'] = fName
             finalIng['expDate'] = ing['ingredientExpirationDate']
             allIngridients.append(finalIng)
-    
+
     allIngridients.sort(key=lambda item:item['expDate'])
     print(allIngridients)
 
@@ -70,13 +70,17 @@ def recipes():
 @login_is_required
 def fridge():
     fid = request.args.get('fid')
-    fridge = dbobj.getFridge(fridgeID=fid)
+    fridge = dbobj.getFridgeData(fridgeID=fid)
     ingridients = dbobj.getIngredientsInFridge(fridgeID=fid)
     session["currFridge"] = fid
     collaboratorsID = dbobj.getFridgeCollaborators(fridgeID=fid)
     collaboratorsContactInfo = [dbobj.getUserContactByUserID(c) for c in collaboratorsID]
     for ingridient in ingridients:
-        ingridient['nutrition'] = (dbobj.getIngredientDataFromName(ingredientName=ingridient['ingredientName']))[1]
+        _, ingredientData = dbobj.getIngredientDataFromName(ingredientName=ingridient['ingredientName'])
+        if ingredientData:
+            ingridient['nutrition'] = ingredientData
+        else:
+            ingridient['nutrition'] = None
 
     return render_template('fridge.html', ingridients=ingridients, fridge=fridge, collaborators=collaboratorsContactInfo)
 
@@ -102,7 +106,7 @@ def share_fridge():
     collaboratorID = dbobj.getUserIDFromEmail(collaboratorEmail)
     fid = session["currFridge"]
 
-    if dbobj.userExists(collaboratorID):
+    if dbobj.doesUserExist(collaboratorID):
         dbobj.shareFridgeWithUser(collaboratorID, fid)
 
     return redirect("/fridge/?fid="+str(fid))

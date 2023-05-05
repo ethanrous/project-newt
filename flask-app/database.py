@@ -28,6 +28,7 @@ dotenv.load_dotenv()
 """                 "expiration_date": "",   """
 """                 "dateAdded": "",         """
 """                 "quatity": ""            """
+"""                 "location": ""           """
 """             }]                           """
 """         },                               """
 """         "ingridients": {                 """
@@ -77,6 +78,10 @@ class newtdb:
             return True
         return False
 
+    def getUserContactByUserID(self, userID):
+        contactInfo = self.userscol.find_one({ "_id": userID }, { "_id": 0, "name": 1, "email": 1})
+        return contactInfo
+
     def __addFridgeToUser(self, userID, fridgeID):
         self.userscol.update_one(
             { "_id": userID },
@@ -118,6 +123,10 @@ class newtdb:
         self.fridgescol.insert_one(newFridgeData)
         self.__addFridgeToUser(ownerID, fridgeID)
 
+    def getFridgeData(self, fridgeID):
+        fridge = self.fridgescol.find_one( { "_id": fridgeID } )
+        return fridge
+
     def __addUserToFridge(self, userID, fridgeID):
         self.fridgescol.update_one(
             {"_id": fridgeID },
@@ -130,7 +139,7 @@ class newtdb:
             { "$pull": { "collaborators": userID } }
         )
 
-    def addIngredientToFridge(self, fridgeID, ingredientName, ingredientExpirationDate, ingredientQuatity, quantityUnits):
+    def addIngredientToFridge(self, fridgeID, ingredientName, ingredientExpirationDate, ingredientQuatity, quantityUnits, location):
         while True:
             newIngredientID = random.randint(1, 1000)
             possibleCollision = self.fridgescol.aggregate( [ {"$match": { "_id": fridgeID, 'ingredients.ingredientID': newIngredientID } }, { "$unwind": { "path": "$ingredients" } } ] )
@@ -143,7 +152,8 @@ class newtdb:
             "ingredientExpirationDate": ingredientExpirationDate,
             "dateAdded": datetime.date.today().strftime("%Y-%m-%d"),
             "ingredientQuatity": ingredientQuatity,
-            "quantityUnits": quantityUnits # Count, lbs, gallons, etc.
+            "quantityUnits": quantityUnits, # Count, lbs, gallons, etc.
+            "location": location
         }
 
         self.fridgescol.update_one(
@@ -172,6 +182,10 @@ class newtdb:
         if self.fridgescol.find_one( { "_id": fridgeID, "collaborators": userID } ):
             return True
         return False
+
+    def getFridgeCollaborators(self, fridgeID):
+        collaborators = self.fridgescol.find_one( { "_id": fridgeID }, {"_id": 0, "collaborators": 1} )
+        return collaborators
 
     # CAUTION - THIS DELETES ALL FRIDGES IN THE DATABASE
     def dropFridges(self):
