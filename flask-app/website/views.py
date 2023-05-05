@@ -57,7 +57,6 @@ def notifications():
             allIngridients.append(finalIng)
 
     allIngridients.sort(key=lambda item:item['expDate'])
-    print(allIngridients)
 
     return render_template('notifications.html', ingridients=allIngridients)
 
@@ -79,15 +78,16 @@ def fridge():
     session["currFridge"] = fid
 
     collaboratorsID = dbobj.getFridgeCollaborators(fridgeID=fid)
-    collaboratorsContactInfo = [dbobj.getUserContactByUserID(c) for c in collaboratorsID]
-
+    collaboratorsArr = [dbobj.getUserContactByUserID(c) for c in collaboratorsID]
+    collaboratorsContactInfo = list(filter(lambda item: item is not None, collaboratorsArr))
+    
     for ingridient in ingridients:
         _, ingredientData = dbobj.getIngredientDataFromName(ingredientName=ingridient['ingredientName'])
         if ingredientData:
             ingridient['nutrition'] = ingredientData
         else:
             ingridient['nutrition'] = None
-
+    print(len(collaboratorsContactInfo), collaboratorsContactInfo)
     return render_template('fridge.html', ingridients=ingridients, fridge=fridge, collaborators=collaboratorsContactInfo, isOwner=dbobj.doesUserOwnFridge(fid, session['google_id']))
 
 
@@ -110,6 +110,7 @@ def add_ingridient():
 def share_fridge():
     collaboratorEmail = request.form.get("share-email")
     collaboratorID = dbobj.getUserIDFromEmail(collaboratorEmail)
+    print("CollabID: ", collaboratorID)
     fid = session["currFridge"]
 
     if dbobj.doesUserExist(collaboratorID):

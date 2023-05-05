@@ -80,6 +80,7 @@ class newtdb:
 
     def getUserContactByUserID(self, userID):
         contactInfo = self.userscol.find_one({ "_id": userID }, { "_id": 0, "name": 1, "email": 1})
+        print("Contact Info: ",contactInfo)
         return contactInfo
 
     def __addFridgeToUser(self, userID, fridgeID):
@@ -103,9 +104,6 @@ class newtdb:
         if uid != None:
             uid = uid['_id']
         return uid
-
-    def getUserContactByUserID(self, userID):
-        return self.userscol.find_one({ "_id": userID }, { "_id": 0, "name": 1, "email": 1} )
 
     # CAUTION - THIS DELETES ALL USERS IN THE DATABASE
     def dropUsers(self):
