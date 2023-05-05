@@ -3,12 +3,8 @@ import os
 import random
 import string
 
-import dotenv
 import pymongo
 import requests
-
-dotenv.load_dotenv()
-
 
 # Schema:
 """     {                                    """
@@ -38,17 +34,20 @@ dotenv.load_dotenv()
 """     }                                    """
 """                                          """
 
-
 class newtdb:
     pass
 
     def __init__(self):
-        mongoClient = pymongo.MongoClient("mongodb://localhost:27017/")
+        mongoURL = os.getenv('MONGO_URL') # ex. mongodb://localhost:27017/
+        mongoClient = pymongo.MongoClient(mongoURL)
+
         self.mongoNewt = mongoClient["newtdb"]
 
         self.userscol = self.mongoNewt["users"]
         self.fridgescol = self.mongoNewt["fridges"]
         self.ingredientscol = self.mongoNewt["ingredients"]
+
+        self.nutritionApiKey = os.getenv('NUTRITION_API_KEY')
 
     ##############################
     ### HIGHER LEVEL ENDPOINTS ###
@@ -190,7 +189,7 @@ class newtdb:
 
             foodApiUrl = "https://nutrition-by-api-ninjas.p.rapidapi.com/v1/nutrition"
             foodApiHeaders = {
-                "X-RapidAPI-Key": os.getenv('apiKey'),
+                "X-RapidAPI-Key": self.nutritionApiKey,
                 "X-RapidAPI-Host": "nutrition-by-api-ninjas.p.rapidapi.com"
             }
 

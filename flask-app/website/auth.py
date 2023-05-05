@@ -1,4 +1,3 @@
-from config import GOOGLE_CLIENT_ID
 import os
 import pathlib
 import requests
@@ -22,12 +21,13 @@ auth = Blueprint("auth", __name__)
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
-client_secrets_file = os.path.join(pathlib.Path(__file__).parent.parent, "client_secret.json")
+#client_secrets_file = os.path.join(pathlib.Path(__file__).parent.parent, "client_secret.json")
+client_secrets_file = os.getenv('SECRETS_PATH')
 
 flow = Flow.from_client_secrets_file(
     client_secrets_file=client_secrets_file,
     scopes=["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
-    redirect_uri="http://127.0.0.1:5000/callback"
+    redirect_uri="https://myfridge.arcticridge.net/callback"
 )
 
 
@@ -65,10 +65,10 @@ def callback():
     id_info = id_token.verify_oauth2_token(
         id_token=credentials._id_token,
         request=token_request,
-        audience=GOOGLE_CLIENT_ID
+        audience=os.getenv('GOOGLE_CLIENT_ID')
     )
 
-    
+
 
     session["google_id"] = id_info.get("sub")
     session["name"] = id_info.get("name")
