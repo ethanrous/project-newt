@@ -71,10 +71,16 @@ def recipes():
 def fridge():
     fid = request.args.get('fid')
     fridge = dbobj.getFridgeData(fridgeID=fid)
+
+    if not dbobj.canUserAccessFridge(fid, session['google_id']) or fridge == None:
+        return render_template('404.html'), 404
+
     ingridients = dbobj.getIngredientsInFridge(fridgeID=fid)
     session["currFridge"] = fid
+
     collaboratorsID = dbobj.getFridgeCollaborators(fridgeID=fid)
     collaboratorsContactInfo = [dbobj.getUserContactByUserID(c) for c in collaboratorsID]
+
     for ingridient in ingridients:
         _, ingredientData = dbobj.getIngredientDataFromName(ingredientName=ingridient['ingredientName'])
         if ingredientData:
@@ -82,7 +88,7 @@ def fridge():
         else:
             ingridient['nutrition'] = None
 
-    return render_template('fridge.html', ingridients=ingridients, fridge=fridge, collaborators=collaboratorsContactInfo)
+    return render_template('fridge.html', ingridients=ingridients, fridge=fridge, collaborators=collaboratorsContactInfo, isOwner=dbobj.doesUserOwnFridge(fid, session['google_id']))
 
 
 @views.route("/add-ingridient", methods=['POST', 'GET'])

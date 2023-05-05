@@ -104,9 +104,7 @@ class newtdb:
         return uid
 
     def getUserContactByUserID(self, userID):
-        contactInfo = self.userscol.find_one({ "_id": userID }, { "_id": 0, "name": 1, "email": 1} )
-        return contactInfo
-
+        return self.userscol.find_one({ "_id": userID }, { "_id": 0, "name": 1, "email": 1} )
 
     # CAUTION - THIS DELETES ALL USERS IN THE DATABASE
     def dropUsers(self):
@@ -179,12 +177,12 @@ class newtdb:
 
     def doesUserOwnFridge(self, fridgeID, userID):
         fridgeOwner = self.fridgescol.find_one( { "_id": fridgeID }, { "ownerID": 1 } )
-        if fridgeOwner['ownerID'] == userID:
+        if fridgeOwner and fridgeOwner['ownerID'] == userID:
             return True
         return False
 
     def canUserAccessFridge(self, fridgeID, userID):
-        if self.fridgescol.find_one( { "_id": fridgeID, "collaborators": userID } ):
+        if self.doesUserOwnFridge(fridgeID, userID) or self.fridgescol.find_one( { "_id": fridgeID, "collaborators": userID } ):
             return True
         return False
 
@@ -221,12 +219,9 @@ class newtdb:
             # Get food data from api
             querystring = {"query": ingredientName}
 
-            print(f"Calling food API for {ingredientName}")
             res = requests.request("GET", foodApiUrl, headers=foodApiHeaders, params=querystring).json()
 
             if res == []:
-                print(f"Adding {ingredientName} to aliases for NO-RES")
-
                 if not self.ingredientscol.find_one( { "name": "NO-RES" } ):
                     newIngredientData = {
                         "name": "NO-RES",
@@ -247,13 +242,11 @@ class newtdb:
             del apiIngredientData['name']
 
             if self.ingredientscol.find_one( { "name": apiIngredientName } ):
-                print(f"Adding {ingredientName} as an alias for existing ingredient {apiIngredientName} into cache")
                 self.ingredientscol.update_one(
                     { "name": apiIngredientName },
                     { "$push": { "aliases": ingredientName } }
                 )
             else:
-                print(f"Adding new ingredient {ingredientName} with name {apiIngredientName} into cache")
                 newIngredientData = {
                     "name": apiIngredientName,
                     "aliases": [ingredientName],
@@ -268,7 +261,6 @@ class newtdb:
             ingredientData = []
 
         else:
-            print(f"Found {ingredientName} in cache with name {ingredientData['name']}")
             cleanIngredientName = ingredientData['name']
             ingredientData = ingredientData['nutrition']
 
