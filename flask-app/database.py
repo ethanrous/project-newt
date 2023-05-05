@@ -102,12 +102,9 @@ class newtdb:
         if uid != None:
             uid = uid['_id']
         return uid
-    
+
     def getUserContactByUserID(self, userID):
-        user = self.userscol.find_one({ "_id": userID })
-        name = user["name"]
-        email = user["email"]
-        contactInfo = {'name': name, 'email': email}
+        contactInfo = self.userscol.find_one({ "_id": userID }, { "_id": 0, "name": 1, "email": 1} )
         return contactInfo
 
 
@@ -190,7 +187,7 @@ class newtdb:
         if self.fridgescol.find_one( { "_id": fridgeID, "collaborators": userID } ):
             return True
         return False
-    
+
     def getFridgeCollaborators(self, fridgeID):
         fridge = self.getFridge(fridgeID)
         collaboratorsID = fridge["collaborators"]
