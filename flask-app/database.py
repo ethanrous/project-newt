@@ -103,6 +103,14 @@ class newtdb:
         if uid != None:
             uid = uid['_id']
         return uid
+    
+    def getUserContactByUserID(self, userID):
+        user = self.userscol.find_one({ "_id": userID })
+        name = user["name"]
+        email = user["email"]
+        contactInfo = {'name': name, 'email': email}
+        return contactInfo
+
 
     # CAUTION - THIS DELETES ALL USERS IN THE DATABASE
     def dropUsers(self):
@@ -122,6 +130,7 @@ class newtdb:
         newFridgeData = {"_id": fridgeID, "ownerID": ownerID, "fridgeName": fridgeName, "collaborators": [], "ingredients": [] }
         self.fridgescol.insert_one(newFridgeData)
         self.__addFridgeToUser(ownerID, fridgeID)
+
 
     def getFridgeData(self, fridgeID):
         fridge = self.fridgescol.find_one( { "_id": fridgeID } )
@@ -182,6 +191,11 @@ class newtdb:
         if self.fridgescol.find_one( { "_id": fridgeID, "collaborators": userID } ):
             return True
         return False
+    
+    def getFridgeCollaborators(self, fridgeID):
+        fridge = self.getFridge(fridgeID)
+        collaboratorsID = fridge["collaborators"]
+        return collaboratorsID
 
     def getFridgeCollaborators(self, fridgeID):
         collaborators = self.fridgescol.find_one( { "_id": fridgeID }, {"_id": 0, "collaborators": 1} )
