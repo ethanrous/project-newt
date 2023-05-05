@@ -80,7 +80,6 @@ class newtdb:
 
     def getUserContactByUserID(self, userID):
         contactInfo = self.userscol.find_one({ "_id": userID }, { "_id": 0, "name": 1, "email": 1})
-        print("Contact Info: ",contactInfo)
         return contactInfo
 
     def __addFridgeToUser(self, userID, fridgeID):
@@ -186,12 +185,8 @@ class newtdb:
         return False
 
     def getFridgeCollaborators(self, fridgeID):
-        fridge = self.getFridge(fridgeID)
-        collaboratorsID = fridge["collaborators"]
-        return collaboratorsID
-
-    def getFridgeCollaborators(self, fridgeID):
         collaborators = self.fridgescol.find_one( { "_id": fridgeID }, {"_id": 0, "collaborators": 1} )
+        collaborators = collaborators["collaborators"]
         return collaborators
 
     # CAUTION - THIS DELETES ALL FRIDGES IN THE DATABASE

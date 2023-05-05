@@ -78,16 +78,17 @@ def fridge():
     session["currFridge"] = fid
 
     collaboratorsID = dbobj.getFridgeCollaborators(fridgeID=fid)
+    print("collabsids: ", collaboratorsID)
     collaboratorsArr = [dbobj.getUserContactByUserID(c) for c in collaboratorsID]
     collaboratorsContactInfo = list(filter(lambda item: item is not None, collaboratorsArr))
-    
+
     for ingridient in ingridients:
         _, ingredientData = dbobj.getIngredientDataFromName(ingredientName=ingridient['ingredientName'])
         if ingredientData:
             ingridient['nutrition'] = ingredientData
         else:
             ingridient['nutrition'] = None
-    print(len(collaboratorsContactInfo), collaboratorsContactInfo)
+    print(collaboratorsContactInfo)
     return render_template('fridge.html', ingridients=ingridients, fridge=fridge, collaborators=collaboratorsContactInfo, isOwner=dbobj.doesUserOwnFridge(fid, session['google_id']))
 
 
@@ -110,10 +111,24 @@ def add_ingridient():
 def share_fridge():
     collaboratorEmail = request.form.get("share-email")
     collaboratorID = dbobj.getUserIDFromEmail(collaboratorEmail)
-    print("CollabID: ", collaboratorID)
     fid = session["currFridge"]
 
-    if dbobj.doesUserExist(collaboratorID):
+    if dbobj.doesUserExist(collaboratorID) and collaboratorID not in dbobj.getFridgeCollaborators(fid) and collaboratorID != session['google_id']:
         dbobj.shareFridgeWithUser(collaboratorID, fid)
+
+    return redirect("/fridge/?fid="+str(fid))
+
+
+@views.route("/unshare-fridge/", methods=['GET','POST'])
+@login_is_required
+def unshare_fridge():
+    collabEmail = request.args.get("collabEmail")
+    collabID = dbobj.getUserIDFromEmail(collabEmail)
+    fid = session["currFridge"]
+    print("CollabEmail: ", collabEmail)
+    print("CollabID: ", collabID)
+    print("FID: ", fid)
+    dbobj.unshareFridgeWithUser(userID=collabID, fridgeID=fid)
+    
 
     return redirect("/fridge/?fid="+str(fid))
