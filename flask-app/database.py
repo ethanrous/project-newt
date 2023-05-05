@@ -98,6 +98,14 @@ class newtdb:
         if uid != None:
             uid = uid['_id']
         return uid
+    
+    def getUserContactByUserID(self, userID):
+        user = self.userscol.find_one({ "_id": userID })
+        name = user["name"]
+        email = user["email"]
+        contactInfo = {'name': name, 'email': email}
+        return contactInfo
+
 
     # CAUTION - THIS DELETES ALL USERS IN THE DATABASE
     def dropUsers(self):
@@ -118,6 +126,10 @@ class newtdb:
         self.fridgescol.insert_one(newFridgeData)
         self.__addFridgeToUser(ownerID, fridgeID)
 
+    def getFridge(self, fridgeID):
+        fridge = self.fridgescol.find_one( { "_id": fridgeID } )
+        return fridge
+
     def __addUserToFridge(self, userID, fridgeID):
         self.fridgescol.update_one(
             {"_id": fridgeID },
@@ -130,7 +142,7 @@ class newtdb:
             { "$pull": { "collaborators": userID } }
         )
 
-    def addIngredientToFridge(self, fridgeID, ingredientName, ingredientExpirationDate, ingredientQuatity, quantityUnits):
+    def addIngredientToFridge(self, fridgeID, ingredientName, ingredientExpirationDate, ingredientQuatity, quantityUnits, location):
         while True:
             newIngredientID = random.randint(1, 1000)
             possibleCollision = self.fridgescol.aggregate( [ {"$match": { "_id": fridgeID, 'ingredients.ingredientID': newIngredientID } }, { "$unwind": { "path": "$ingredients" } } ] )
@@ -143,7 +155,8 @@ class newtdb:
             "ingredientExpirationDate": ingredientExpirationDate,
             "dateAdded": datetime.date.today().strftime("%Y-%m-%d"),
             "ingredientQuatity": ingredientQuatity,
-            "quantityUnits": quantityUnits # Count, lbs, gallons, etc.
+            "quantityUnits": quantityUnits, # Count, lbs, gallons, etc.
+            "location": location
         }
 
         self.fridgescol.update_one(
@@ -172,6 +185,11 @@ class newtdb:
         if self.fridgescol.find_one( { "_id": fridgeID, "collaborators": userID } ):
             return True
         return False
+    
+    def getFridgeCollaborators(self, fridgeID):
+        fridge = self.getFridge(fridgeID)
+        collaboratorsID = fridge["collaborators"]
+        return collaboratorsID
 
     # CAUTION - THIS DELETES ALL FRIDGES IN THE DATABASE
     def dropFridges(self):

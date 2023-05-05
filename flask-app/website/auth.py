@@ -74,7 +74,7 @@ def callback():
     session["name"] = id_info.get("name")
     session["email"] = id_info.get("email")
 
-    userExists = dbobj.userExists(userID=session['google_id'])
+    userExists = dbobj.doesUserExist(userID=session['google_id'])
     print("UserExists: ", userExists)
     if not userExists:
         dbobj.newUser(session["google_id"], session["name"], session["email"])
