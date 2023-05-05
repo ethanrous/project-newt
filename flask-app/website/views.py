@@ -37,7 +37,7 @@ def create_fridge():
 @views.route("/settings")
 @login_is_required
 def settings():
-    return render_template('settings.html')
+    return render_template('settings.html', userName=session['name'])
 
 @views.route("/notifications")
 @login_is_required
@@ -134,6 +134,14 @@ def unshare_fridge():
 @login_is_required
 def delete_fridge():
     fid = session['currFridge']
-    
+
 
     return redirect("/home")
+
+
+@views.route("/change-name", methods=['GET','POST'])
+@login_is_required
+def change_name():
+    name = request.form.get('name')
+
+    return redirect("/settings")
