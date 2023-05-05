@@ -2,3 +2,6 @@
 __pycache__/
 .env
 .DS_Store
+flask-app/website/static/recipeKey.js
+flask-app/config.py
+flask-app/client_secret.json

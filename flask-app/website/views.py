@@ -102,7 +102,7 @@ def share_fridge():
     collaboratorID = dbobj.getUserIDFromEmail(collaboratorEmail)
     fid = session["currFridge"]
 
-    if dbobj.userExists(collaboratorID):
+    if dbobj.doesUserExist(collaboratorID):
         dbobj.shareFridgeWithUser(collaboratorID, fid)
 
     return redirect("/fridge/?fid="+str(fid))
