@@ -2,7 +2,7 @@
 {% block title %}Fridge{% endblock %}
 {% block contentTitle %}Fridge{% endblock %}
 
-{% block head %}    
+{% block head %}
     <link rel="stylesheet" href="../static/fridge.css">
 {% endblock %}
 
@@ -26,12 +26,16 @@
                         <div id="collapse{{ingredient.ingredientID}}" class="accordion-collapse collapse" aria-labelledby="heading{{ingredient.ingredientID}}" data-bs-parent="#accordionExample">
                           <div class="accordion-body">
                             <p>Quantity: {{ingredient.ingredientQuatity}} {{ingredient.quantityUnits}}</p>
+                            {% if ingredient.nutrition %}
                             <p>Calories: {{ingredient.nutrition.calories}}</p>
                             <p>Total Fat: {{ingredient.nutrition.fat_total_g}}g</p>
                             <p>Cholesterol: {{ingredient.nutrition.cholesterol_mg}}mg</p>
                             <p>Sodium: {{ingredient.nutrition.sodium_mg}}mg</p>
                             <p>Total Carbs.: {{ingredient.nutrition.carbohydrates_total_g}}g</p>
                             <p>Protein: {{ingredient.nutrition.protein_g}}g</p>
+                            {% else %}
+                            <p>Unable to get nutrition data for "{{ingredient.ingredientName}}"</p>
+                            {% endif %}
                           </div>
                         </div>
                     </div>
@@ -40,7 +44,7 @@
 
 
                 </div>
-                
+
             </div>
             <br>
             <div class="fridge-section">
@@ -57,12 +61,16 @@
                         <div id="collapse{{ingredient.ingredientID}}" class="accordion-collapse collapse" aria-labelledby="heading{{ingredient.ingredientID}}" data-bs-parent="#accordionExample">
                           <div class="accordion-body">
                             <p>Quantity: {{ingredient.ingredientQuatity}} {{ingredient.quantityUnits}}</p>
+                            {% if ingredient.nutrition %}
                             <p>Calories: {{ingredient.nutrition.calories}}</p>
                             <p>Total Fat: {{ingredient.nutrition.fat_total_g}}g</p>
                             <p>Cholesterol: {{ingredient.nutrition.cholesterol_mg}}mg</p>
                             <p>Sodium: {{ingredient.nutrition.sodium_mg}}mg</p>
                             <p>Total Carbs.: {{ingredient.nutrition.carbohydrates_total_g}}g</p>
                             <p>Protein: {{ingredient.nutrition.protein_g}}g</p>
+                            {% else %}
+                            <p>Unable to get nutrition data for "{{ingredient.ingredientName}}"</p>
+                            {% endif %}
                           </div>
                         </div>
                     </div>
@@ -71,7 +79,7 @@
 
 
                 </div>
-                
+
             </div>
         </div>
         <div class="fridge" style="width: 30%;">
@@ -89,13 +97,16 @@
                         <div id="collapse{{ingredient.ingredientID}}" class="accordion-collapse collapse" aria-labelledby="heading{{ingredient.ingredientID}}" data-bs-parent="#accordionExample">
                           <div class="accordion-body">
                             <p>Quantity: {{ingredient.ingredientQuatity}} {{ingredient.quantityUnits}}</p>
+                            {% if ingredient.nutrition %}
                             <p>Calories: {{ingredient.nutrition.calories}}</p>
                             <p>Total Fat: {{ingredient.nutrition.fat_total_g}}g</p>
                             <p>Cholesterol: {{ingredient.nutrition.cholesterol_mg}}mg</p>
                             <p>Sodium: {{ingredient.nutrition.sodium_mg}}mg</p>
                             <p>Total Carbs.: {{ingredient.nutrition.carbohydrates_total_g}}g</p>
                             <p>Protein: {{ingredient.nutrition.protein_g}}g</p>
-                            
+                            {% else %}
+                            <p>Unable to get nutrition data for "{{ingredient.ingredientName}}"</p>
+                            {% endif %}
                           </div>
                         </div>
                     </div>
@@ -120,12 +131,16 @@
                         <div id="collapse{{ingredient.ingredientID}}" class="accordion-collapse collapse" aria-labelledby="heading{{ingredient.ingredientID}}" data-bs-parent="#accordionExample">
                           <div class="accordion-body">
                             <p>Quantity: {{ingredient.ingredientQuatity}} {{ingredient.quantityUnits}}</p>
+                            {% if ingredient.nutrition %}
                             <p>Calories: {{ingredient.nutrition.calories}}</p>
                             <p>Total Fat: {{ingredient.nutrition.fat_total_g}}g</p>
                             <p>Cholesterol: {{ingredient.nutrition.cholesterol_mg}}mg</p>
                             <p>Sodium: {{ingredient.nutrition.sodium_mg}}mg</p>
                             <p>Total Carbs.: {{ingredient.nutrition.carbohydrates_total_g}}g</p>
                             <p>Protein: {{ingredient.nutrition.protein_g}}g</p>
+                            {% else %}
+                            <p>Unable to get nutrition data for "{{ingredient.ingredientName}}"</p>
+                            {% endif %}
                           </div>
                         </div>
                     </div>
@@ -136,7 +151,7 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
     <div class="addItems">
         <form action="/add-ingridient?fid={{fridge._id}}" id="ingridientform">
@@ -162,7 +177,7 @@
             </select>
 
             <br>
-            
+
             <label for="expiration-date">Expiration Date:</label>
             <input type="date" id="expiration-date" name="expiration-date" required>
 
@@ -187,7 +202,7 @@
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
             Share Fridge
         </button>
-        
+
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">

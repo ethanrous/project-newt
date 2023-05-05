@@ -68,7 +68,7 @@ def callback():
         audience=GOOGLE_CLIENT_ID
     )
 
-    
+
 
     session["google_id"] = id_info.get("sub")
     session["name"] = id_info.get("name")
