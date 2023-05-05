@@ -24,6 +24,7 @@ import requests
 """                 "expiration_date": "",   """
 """                 "dateAdded": "",         """
 """                 "quatity": ""            """
+"""                 "location": ""           """
 """             }]                           """
 """         },                               """
 """         "ingridients": {                 """
@@ -76,6 +77,10 @@ class newtdb:
             return True
         return False
 
+    def getUserContactByUserID(self, userID):
+        contactInfo = self.userscol.find_one({ "_id": userID }, { "_id": 0, "name": 1, "email": 1})
+        return contactInfo
+
     def __addFridgeToUser(self, userID, fridgeID):
         self.userscol.update_one(
             { "_id": userID },
@@ -125,7 +130,8 @@ class newtdb:
         self.fridgescol.insert_one(newFridgeData)
         self.__addFridgeToUser(ownerID, fridgeID)
 
-    def getFridge(self, fridgeID):
+
+    def getFridgeData(self, fridgeID):
         fridge = self.fridgescol.find_one( { "_id": fridgeID } )
         return fridge
 
@@ -189,6 +195,10 @@ class newtdb:
         fridge = self.getFridge(fridgeID)
         collaboratorsID = fridge["collaborators"]
         return collaboratorsID
+
+    def getFridgeCollaborators(self, fridgeID):
+        collaborators = self.fridgescol.find_one( { "_id": fridgeID }, {"_id": 0, "collaborators": 1} )
+        return collaborators
 
     # CAUTION - THIS DELETES ALL FRIDGES IN THE DATABASE
     def dropFridges(self):
