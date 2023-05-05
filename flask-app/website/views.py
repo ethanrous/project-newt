@@ -21,7 +21,7 @@ def login_is_required(function):
 @views.route("/home")
 @login_is_required
 def protected_area():
-    fridgeIds = dbobj.getFridgesByUserID(userID=session['google_id'])
+    fridgeIds = dbobj.getOwnedFridgesByUserID(userID=session['google_id'])
     fridges = [dbobj.getFridgeData(fridgeID=id) for id in fridgeIds]
     return render_template('home.html', fridges=fridges)
 
