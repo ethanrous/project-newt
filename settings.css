@@ -1,0 +1,55 @@
+.settings-container {
+    max-width: 600px;
+    padding: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  input[type="text"],
+input[type="number"],
+input[type="date"] {
+width: 100%;
+padding: 10px;
+border: 1px solid #ccc;
+border-radius: 5px;
+margin-bottom: 20px;
+text-transform: capitalize;
+}
+input[type="text"], input[type="number"], input[type="date"]
+select {
+display: block;
+width: 100%;
+padding: 10px;
+margin-bottom: 20px;
+border: 1px solid #ccc;
+border-radius: 4px;
+box-sizing: border-box;
+}
+
+  
+  button[type="submit"] {
+    background-color: #3f51b5;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #1a237e;
+  }
+  
+  @media only screen and (min-width: 600px) {
+    .settings-container {
+      margin-top: 40px;
+    }
+  }
