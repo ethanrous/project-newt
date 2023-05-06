@@ -149,5 +149,7 @@ def delete_fridge():
 @login_is_required
 def change_name():
     name = request.form.get('name')
+    print("NAME: ",name)
+    dbobj.updateUserName(userID=session['google_id'],newName=name)
 
     return redirect("/settings")

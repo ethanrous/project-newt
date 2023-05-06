@@ -126,7 +126,7 @@ class newtdb:
         return self.userscol.find_one( { "_id": userID }, { "_id": 0, "name": 1, "email": 1} )
 
     def updateUserName(self, userID, newName):
-        self.userscol.update_one( {"_id": userID }, { "name": newName } )
+        self.userscol.update_one( {"_id": userID }, { "$set": { "name": newName }} )
 
     # CAUTION - THIS DELETES ALL USERS IN THE DATABASE
     def dropUsers(self):
