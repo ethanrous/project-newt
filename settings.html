@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"
+    />
+    <link rel="stylesheet" href="settings.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+    <title>MyFridge | Settings</title>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <ul>
+                <li><a href="/index.html" class="logo">
+                    <!-- <img src="/logo.png" alt=""> -->
+                    <span class="nav-item">MyFridge</span>
+                </a></li>
+                <li><a href="/index.html">
+                    <i class="fas fa-home"></i>
+                    <span class="nav-item">Home</span>
+                </a></li>
+                <li><a href="recipes.html">
+                    <i class="fas fa-solid fa-utensils"></i>
+                    <span class="nav-item">Recipes</span>
+                </a></li>
+                <li><a href="notifications.html">
+                    <i class="fas fa-solid fa-bell"></i>
+                    <span class="nav-item">Notifications</span>
+                </a></li>
+                <li><a href="calendar.html">
+                    <i class="fas fa-solid fa-calendar-days"></i>
+                    <span class="nav-item">Calendar</span>
+                </a></li>
+                <li><a href="settings.html">
+                    <i class="fas fa-solid fa-gear"></i>
+                    <span class="nav-item">Settings</span>
+                </a></li>
+                <li><a href="" class="logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="nav-item">Log Out</span>
+                </a></li>
+
+
+            </ul>
+        </nav>
+
+    </div>
+    <section class="main">
+        <h1>SETTINGS PAGE</h1>
+        <form>
+            <div class="settings-container">
+                <form id="settings-form" enctype="multipart/form-data">
+                  <div class="form-group">
+                    <label for="fname">First Name</label>
+                    <input type="text" id="fname" name="fname" placeholder="First Name"required>
+                  </div>
+                  <div class="form-group">
+                    <label for="lname">Last Name</label>
+                    <input type="text" id="lname" name="lname" placeholder="Last Name" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="birthday">Birthday</label>
+                    <input type="date" id="birthday" name="birthday" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="notifications">Notification Preferences</label>
+                    <div>
+                      <input type="checkbox" id="email-notifications" name="email-notifications" checked>
+                      Email Notifications
+                    </div>
+                    <div>
+                      <input type="checkbox" id="push-notifications" name="push-notifications" checked>
+                     Push Notifications
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <button type="submit" id="save-settings-button">Save Changes</button>
+                  </div>
+                </form>
+              </div>
+    </section>
+</body>
+</html>

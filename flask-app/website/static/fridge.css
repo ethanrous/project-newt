@@ -72,19 +72,13 @@ border-radius: 5px;
 margin-bottom: 20px;
 }
 
-button[type="submit"] {
-background: #06618F;
+/* button[type="submit"] {
 color: #fff;
 padding: 10px 20px;
 border: none;
 border-radius: 5px;
 cursor: pointer;
-}
-
-button[type="submit"]:hover {
-background: #06618F;
-
-}   
+} */
 
 label {
 display: block;

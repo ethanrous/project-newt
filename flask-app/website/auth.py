@@ -10,7 +10,11 @@ import google.auth.transport.requests
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from . import dbobj
 import time
+from dotenv import load_dotenv
 
+load_dotenv()
+
+GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 
 #from .models import User
 # from flask_login import login_user, logout_user, login_required, current_user
