@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  newt:
+    container_name: newt
+    image: ethrous/newt:v1.X
+    ports:
+      - 8080:8080
+    environment:
+      - NUTRITION_API_KEY= XXXXXX
+      - MONGO_URL=mongodb://{MONGO_USER}:{MONGO_PASS}@mongo:27017/
+      - GOOGLE_CLIENT_ID= XXXXXX
+      - SECRETS_PATH=/config/client_secret.json
+    volumes:
+      - /path/to/config/dir/on/host/:/config/
+
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: {MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: {MONGO_PASS}
+
+# Custom docker network for reverse proxy support (Nginx, Traefik, etc.)
+networks:
+  default:
+    name: proxynet
+    external: true
