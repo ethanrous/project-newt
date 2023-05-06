@@ -108,12 +108,14 @@ class newtdb:
         )
 
     def getOwnedFridgesByUserID(self, userID):
-        if ( fridges := list(self.userscol.find( { "_id": userID }, { "_id": 0, "ownedFridges": 1 } ) ) ) != [{}]:
+        fridges = list(self.userscol.find( { "_id": userID }, { "_id": 0, "ownedFridges": 1 } ) )
+        if fridges != [] and fridges != [{}]:
             return fridges[0]['ownedFridges']
         return []
 
     def getCollabFridgesByUserID(self, userID):
-        if ( fridges := list(self.userscol.find( { "_id": userID }, { "_id": 0, "sharedFridges": 1 } ) ) ) != [{}]:
+        fridges = list(self.userscol.find( { "_id": userID }, { "_id": 0, "sharedFridges": 1 } ) )
+        if fridges != [] and fridges != [{}]:
             return fridges[0]['sharedFridges']
         else:
             return []
@@ -128,7 +130,6 @@ class newtdb:
         return self.userscol.find_one( { "_id": userID }, { "_id": 0, "name": 1, "email": 1} )
 
     def updateUserName(self, userID, newName):
-        print(f"Updating name of user {userID} with name {self.getUserContactByUserID(userID)['name']} to {newName}")
         self.userscol.update_one( {"_id": userID }, { "$set": { "name": newName } } )
 
     def getFridgesByUserID(self, userID):
@@ -193,6 +194,18 @@ class newtdb:
             { "$push": { "ingredients": ingredientData } }
         )
 
+    def updateIngredient(self, fridgeID, ingredientID, newQuantity, newUnits):
+        ingredientData = list(self.fridgescol.aggregate( [ { "$unwind": { "path": "$ingredients" } }, {"$match": { "_id": fridgeID, 'ingredients.ingredientID': ingredientID } } ] ) )[0]['ingredients']
+        ingredientData['ingredientQuatity'] = newQuantity
+        ingredientData['quantityUnits'] = newUnits
+
+        self.removeIngredientFromFridge(fridgeID, ingredientID)
+
+        self.fridgescol.update_one(
+            { "_id": fridgeID },
+            { "$push": { "ingredients": ingredientData } }
+        )
+
     def removeIngredientFromFridge(self, fridgeID, ingredientID):
         self.fridgescol.update_one(
             { "_id": fridgeID },
@@ -200,7 +213,7 @@ class newtdb:
         )
 
     def getIngredientsInFridge(self, fridgeID):
-        return self.fridgescol.find_one( { "_id": fridgeID }, { "_id": 0, "ingredients": 1 } )['ingredients']
+        return sorted(self.fridgescol.find_one( { "_id": fridgeID }, { "_id": 0, "ingredients": 1 } )['ingredients'], key=lambda ing : ing['ingredientName'])
 
     def doesUserOwnFridge(self, fridgeID, userID):
         fridgeOwner = self.fridgescol.find_one( { "_id": fridgeID }, { "ownerID": 1 } )
@@ -263,7 +276,7 @@ class newtdb:
                     { "name": "NO-RES" },
                     { "$push": { "aliases": ingredientName } }
                 )
-                return []
+                return None, None
 
             apiIngredientData = res[0]
             apiIngredientName = apiIngredientData['name']
