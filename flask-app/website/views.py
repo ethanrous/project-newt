@@ -136,7 +136,7 @@ def unshare_fridge():
     return redirect("/fridge/?fid="+str(fid))
 
 
-@views.route("/delete-fridge/", methods=['GET','POST'])
+@views.route("/delete-fridge", methods=['GET','POST'])
 @login_is_required
 def delete_fridge():
     fid = session['currFridge']
