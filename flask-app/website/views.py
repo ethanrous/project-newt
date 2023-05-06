@@ -1,10 +1,10 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
-from flask_login import login_required, current_user
-#from .models import Post, User, Comment, Like
-from . import dbobj
-#from auth import login_is_required
-from flask import Flask, session, abort, redirect, request
 from itertools import chain
+
+from flask import (Blueprint, Flask, abort, flash, redirect, render_template,
+                   request, session, url_for)
+from flask_login import current_user, login_required
+
+from . import dbobj
 
 views = Blueprint("views", __name__)
 
@@ -21,15 +21,12 @@ def login_is_required(function):
 @views.route("/home")
 @login_is_required
 def protected_area():
-
     ownedFridgesID = dbobj.getOwnedFridgesByUserID(userID=session['google_id'])
     ownedFridges = [dbobj.getFridgeData(fridgeID=id) for id in ownedFridgesID]
 
     sharedFridgesID = dbobj.getCollabFridgesByUserID(userID=session['google_id'])
     sharedFridges = [dbobj.getFridgeData(fridgeID=id) for id in sharedFridgesID]
     return render_template('home.html', ownedFridges=ownedFridges, sharedFridges=sharedFridges)
-
-
 
 @views.route("/create-fridge", methods=['POST'])
 @login_is_required
@@ -48,21 +45,7 @@ def settings():
 @views.route("/notifications")
 @login_is_required
 def notifications():
-    fridgeIds = dbobj.getFridgesByUserID(userID=session['google_id'])
-    fridges = [dbobj.getFridgeData(fridgeID=id) for id in fridgeIds]
-
-    allIngridients = []
-    for fridge in fridges:
-        ingArr = fridge['ingredients']
-        fName = fridge['fridgeName']
-        for ing in ingArr:
-            finalIng = {}
-            finalIng['ingredientName'] = ing['ingredientName']
-            finalIng['fridgeName'] = fName
-            finalIng['expDate'] = ing['ingredientExpirationDate']
-            allIngridients.append(finalIng)
-
-    allIngridients.sort(key=lambda item:item['expDate'])
+    allIngridients = dbobj.getAllIngredientsByUserID(userID=session['google_id'])
 
     return render_template('notifications.html', ingridients=allIngridients)
 
@@ -75,38 +58,29 @@ def recipes():
 @login_is_required
 def fridge():
     fid = request.args.get('fid')
-    fridge = dbobj.getFridgeData(fridgeID=fid)
 
     if not dbobj.canUserAccessFridge(fid, session['google_id']) or fridge == None:
         return render_template('404.html'), 404
 
-    ingridients = dbobj.getIngredientsInFridge(fridgeID=fid)
     session["currFridge"] = fid
-    collaboratorsID = dbobj.getFridgeCollaborators(fridgeID=fid)
-    collaboratorsArr = [dbobj.getUserContactByUserID(c) for c in collaboratorsID]
-    collaboratorsContactInfo = list(filter(lambda item: item is not None, collaboratorsArr))
+    collaboratorsContactInfo = list(filter(lambda item: item is not None, [dbobj.getUserContactByUserID(c) for c in dbobj.getFridgeCollaborators(fridgeID=fid)]))
 
+    ingridients = dbobj.getIngredientsInFridge(fridgeID=fid)
     for ingridient in ingridients:
-        _, ingredientData = dbobj.getIngredientDataFromName(ingredientName=ingridient['ingredientName'])
-        if ingredientData:
-            ingridient['nutrition'] = ingredientData
-        else:
-            ingridient['nutrition'] = None
-    return render_template('fridge.html', ingridients=ingridients, fridge=fridge, collaborators=collaboratorsContactInfo, isOwner=dbobj.doesUserOwnFridge(fid, session['google_id']))
+        ingridient['nutrition'] = dbobj.getIngredientDataFromName(ingredientName=ingridient['ingredientName'])
+
+    return render_template('fridge.html', ingridients=ingridients, fridge=dbobj.getFridgeData(fridgeID=fid), collaborators=collaboratorsContactInfo, isOwner=dbobj.doesUserOwnFridge(fid, session['google_id']))
 
 
 @views.route("/add-ingridient", methods=['POST', 'GET'])
 @login_is_required
 def add_ingridient():
-    itemName = request.args.get("item")
-    quatityVal = request.args.get("quantityValue")
-    quantityType = request.args.get("quantityType")
-    expDate = request.args.get("expiration-date")
-    location = request.args.get("location")
+    itemName, quatityVal, quantityType, expDate, location = request.args.get("item"), request.args.get("quantityValue"), request.args.get("quantityType"), request.args.get("expiration-date"), request.args.get("location")
+
     fid = session["currFridge"]
     dbobj.addIngredientToFridge(fridgeID=fid, ingredientName=itemName, ingredientExpirationDate=expDate, ingredientQuatity=quatityVal, quantityUnits=quantityType, location=location)
 
-    return redirect("/fridge/?fid="+str(fid))
+    return redirect(f"/fridge/?fid={fid}")
 
 @views.route("/share-fridge", methods=['POST'])
 @login_is_required
@@ -118,7 +92,7 @@ def share_fridge():
     if dbobj.doesUserExist(collaboratorID) and collaboratorID not in dbobj.getFridgeCollaborators(fid) and collaboratorID != session['google_id']:
         dbobj.shareFridgeWithUser(collaboratorID, fid)
 
-    return redirect("/fridge/?fid="+str(fid))
+    return redirect(f"/fridge/?fid={fid}")
 
 
 @views.route("/unshare-fridge/", methods=['GET','POST'])
@@ -132,7 +106,7 @@ def unshare_fridge():
         dbobj.unshareFridgeWithUser(userID=collabID, fridgeID=fid)
 
 
-    return redirect("/fridge/?fid="+str(fid))
+    return redirect(f"/fridge/?fid={fid}")
 
 
 @views.route("/delete-fridge", methods=['GET','POST'])
@@ -140,7 +114,6 @@ def unshare_fridge():
 def delete_fridge():
     fid = session['currFridge']
     dbobj.deleteFridge(fid, session['google_id'])
-    print("delted the fridge")
     return redirect("/home")
 
 
@@ -157,10 +130,8 @@ def change_name():
 def delete_ingredient():
     fid = session['currFridge']
     ingID = request.args.get('ingID')
-    print('FID: ', fid)
-    print('INGID: ', ingID)
     dbobj.removeIngredientFromFridge(fridgeID=fid, ingredientID=int(ingID))
-    return redirect("/fridge/?fid="+str(fid))
+    return redirect(f"/fridge/?fid={fid}")
 
 
 @views.route("/update-ingredient/", methods=['GET','POST'])
