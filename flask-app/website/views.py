@@ -21,11 +21,12 @@ def login_is_required(function):
 @views.route("/home")
 @login_is_required
 def protected_area():
+
     ownedFridgesID = dbobj.getOwnedFridgesByUserID(userID=session['google_id'])
-    ownedFridges = [dbobj.getFridgeData(fridgeID=id) for id in   ownedFridgesID] 
+    ownedFridges = [dbobj.getFridgeData(fridgeID=id) for id in ownedFridgesID]
 
     sharedFridgesID = dbobj.getCollabFridgesByUserID(userID=session['google_id'])
-    sharedFridges = [dbobj.getFridgeData(fridgeID=id) for id in   sharedFridgesID]
+    sharedFridges = [dbobj.getFridgeData(fridgeID=id) for id in sharedFridgesID]
     return render_template('home.html', ownedFridges=ownedFridges, sharedFridges=sharedFridges)
 
 
@@ -129,7 +130,7 @@ def unshare_fridge():
         collabID = dbobj.getUserIDFromEmail(collabEmail)
         fid = session["currFridge"]
         dbobj.unshareFridgeWithUser(userID=collabID, fridgeID=fid)
-    
+
 
     return redirect("/fridge/?fid="+str(fid))
 

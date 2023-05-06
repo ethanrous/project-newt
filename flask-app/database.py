@@ -115,6 +115,8 @@ class newtdb:
     def getCollabFridgesByUserID(self, userID):
         if ( fridges := list(self.userscol.find( { "_id": userID }, { "_id": 0, "sharedFridges": 1 } ) ) ) != [{}]:
             return fridges[0]['sharedFridges']
+        else:
+            return []
 
     def getUserIDFromEmail(self, email):
         uid = self.userscol.find_one( { "email": email }, { "_id": 1 } )
@@ -126,7 +128,8 @@ class newtdb:
         return self.userscol.find_one( { "_id": userID }, { "_id": 0, "name": 1, "email": 1} )
 
     def updateUserName(self, userID, newName):
-        self.userscol.update_one( {"_id": userID }, { "$set": { "name": newName }} )
+        print(f"Updating name of user {userID} with name {self.getUserContactByUserID(userID)['name']} to {newName}")
+        self.userscol.update_one( {"_id": userID }, { "$set": { "name": newName } } )
 
     # CAUTION - THIS DELETES ALL USERS IN THE DATABASE
     def dropUsers(self):
