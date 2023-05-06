@@ -21,7 +21,7 @@ MyFridge is a web-based application that allows a user to keep track of all the 
 <strong>APIs: </strong> The application used Nutrition by API-Ninjas to retrieve the nutritonal data for the ingredients and Recipe Search and Diet by Edamam to get recipes.
 
 ## Demo
-
+![](name-of-giphy.gif)
 View a live demo of the application here: 
 
 ## How to use
