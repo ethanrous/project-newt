@@ -6,9 +6,10 @@ def main():
     userEmail = "ethrous@bu.edu"
 
     dbobj = database.newtdb()
-
-    dbobj.dropUsers()
-    dbobj.dropFridges()
+    x, y = 1, 2
+    print(x)
+    #dbobj.dropUsers()
+    #dbobj.dropFridges()
     #dbobj.dropIngredents()
     return
     userID = dbobj.getUserIDFromEmail(userEmail)
