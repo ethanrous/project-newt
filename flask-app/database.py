@@ -66,6 +66,23 @@ class newtdb:
         self.removeSharedFridgeFromUser(userID=userID, fridgeID=fridgeID)
         self.removeUserFromFridge(userID=userID, fridgeID=fridgeID)
 
+    def getAllIngredientsByUserID(self, userID):
+        usersFridges = self.getOwnedFridgesByUserID(userID)
+        usersFridges.extend(self.getCollabFridgesByUserID(userID))
+
+        ingredients = []
+        for fridge in usersFridges:
+            fridgeName = self.getFridgeData(fridgeID=fridge)['fridgeName']
+            for ingredient in self.getIngredientsInFridge(fridgeID=fridge):
+                ingredient['fridgeName'] = fridgeName
+                ingredients.append(ingredient)
+
+        ingredients = sorted(ingredients, key=lambda ing : ing['ingredientExpirationDate'], reverse=False)
+
+        print(ingredients)
+
+        return ingredients
+
     #############
     ### USERS ###
     #############
@@ -276,7 +293,7 @@ class newtdb:
                     { "name": "NO-RES" },
                     { "$push": { "aliases": ingredientName } }
                 )
-                return None, None
+                return None
 
             apiIngredientData = res[0]
             apiIngredientName = apiIngredientData['name']
@@ -306,7 +323,7 @@ class newtdb:
             cleanIngredientName = ingredientData['name']
             ingredientData = ingredientData['nutrition']
 
-        return cleanIngredientName, ingredientData
+        return ingredientData
 
     # CAUTION - THIS DELETES ALL INGREDIENTS IN THE DATABASE
     def dropIngredents(self):
