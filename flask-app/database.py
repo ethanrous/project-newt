@@ -201,7 +201,7 @@ class newtdb:
         return self.doesUserOwnFridge(fridgeID, userID) or self.fridgescol.find_one( { "_id": fridgeID, "collaborators": userID } )
 
     def getFridgeCollaborators(self, fridgeID):
-        return self.fridgescol.find_one( { "_id": fridgeID }, {"_id": 0, "collaborators": 1} )
+        return (self.fridgescol.find_one( { "_id": fridgeID }, {"_id": 0, "collaborators": 1} ))['collaborators']
 
     def deleteFridge(self, fridgeID, userID):
         if not self.doesUserOwnFridge(fridgeID, userID):

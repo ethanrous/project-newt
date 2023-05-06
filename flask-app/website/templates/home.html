@@ -8,7 +8,7 @@
 
 <div class="row g-3 my-2">
     <span>
-        <h3 class="fs-4 mb-3">My Fridges</h3>
+        <h3 class="fs-4 mb-3">Owned Fridges</h3>
         <!-- Button trigger modal -->
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
             Create Fridge
@@ -39,8 +39,8 @@
         </div>
     </span>
     
-    {% if fridges|length > 0%}
-        {% for fridge in fridges %}
+    {% if ownedFridges|length > 0%}
+        {% for fridge in ownedFridges %}
             <div class="col-md-3">
                 <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
                     <div>
@@ -56,16 +56,44 @@
     {% else %}  
         <div class="card">
             <div class="card-body">
-            <h5 class="card-title">No Fridges Saved!</h5>
+            <h5 class="card-title">No Fridges Owned!</h5>
             <p class="card-text">Create a Fridge by clicking the button above.</p>
             </div>
         </div> 
     {% endif %} 
 </div>
+<br>
+<br>
 {% endblock %}
 
-
 {% block contentBottom %}
-
+<div class="row g-3 my-2">
+    <span>
+        <h3 class="fs-4 mb-3">Shared Fridges</h3>
+    </span>
+    
+    {% if sharedFridges|length > 0%}
+        {% for fridge in sharedFridges %}
+            <div class="col-md-3">
+                <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
+                    <div>
+                        <p class="fs-5">{{fridge.fridgeName}}</p>
+                        <a href="/fridge/?fid={{fridge._id}}" class="btn btn-primary">Open</a>
+                    </div>
+                    <i class="fa-solid fa-box-archive fs-1 primary-text border rounded-full secondary-bg p-3"></i>
+                    
+                </div>
+                
+            </div>
+        {% endfor %}
+    {% else %}  
+        <div class="card">
+            <div class="card-body">
+            <h5 class="card-title">No Fridges Shared!</h5>
+            <p class="card-text">Get invited to a Fridge by another user.</p>
+            </div>
+        </div> 
+    {% endif %} 
+</div>
 {% endblock %}
 

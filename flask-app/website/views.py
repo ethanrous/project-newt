@@ -21,9 +21,12 @@ def login_is_required(function):
 @views.route("/home")
 @login_is_required
 def protected_area():
-    fridgeIds = dbobj.getOwnedFridgesByUserID(userID=session['google_id'])
-    fridges = [dbobj.getFridgeData(fridgeID=id) for id in fridgeIds]
-    return render_template('home.html', fridges=fridges)
+    ownedFridgesID = dbobj.getOwnedFridgesByUserID(userID=session['google_id'])
+    ownedFridges = [dbobj.getFridgeData(fridgeID=id) for id in   ownedFridgesID] 
+
+    sharedFridgesID = dbobj.getCollabFridgesByUserID(userID=session['google_id'])
+    sharedFridges = [dbobj.getFridgeData(fridgeID=id) for id in   sharedFridgesID]
+    return render_template('home.html', ownedFridges=ownedFridges, sharedFridges=sharedFridges)
 
 
 
@@ -78,8 +81,11 @@ def fridge():
     session["currFridge"] = fid
 
     collaboratorsID = dbobj.getFridgeCollaborators(fridgeID=fid)
+    print('collaboratorsID: ', collaboratorsID)
     collaboratorsArr = [dbobj.getUserContactByUserID(c) for c in collaboratorsID]
+    print('collaboratorsArr', collaboratorsArr)
     collaboratorsContactInfo = list(filter(lambda item: item is not None, collaboratorsArr))
+    print('collaboratorsContactInfo', collaboratorsContactInfo)
 
     for ingridient in ingridients:
         _, ingredientData = dbobj.getIngredientDataFromName(ingredientName=ingridient['ingredientName'])
@@ -134,8 +140,8 @@ def unshare_fridge():
 @login_is_required
 def delete_fridge():
     fid = session['currFridge']
-
-
+    dbobj.deleteFridge(fid, session['google_id'])
+    print("delted the fridge")
     return redirect("/home")
 
 

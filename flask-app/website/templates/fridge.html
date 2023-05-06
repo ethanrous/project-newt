@@ -20,12 +20,11 @@
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="heading{{ingredient.ingredientID}}">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ingredient.ingredientID}}" aria-expanded="false" aria-controls="collapse{{ingredient.ingredientID}}">
-                            {{ingredient.ingredientName}} | Exp. {{ingredient.ingredientExpirationDate}}
+                            {{ingredient.ingredientName}} | {{ingredient.ingredientQuatity}} {{ingredient.quantityUnits}} | Exp. {{ingredient.ingredientExpirationDate}}
                           </button>
                         </h2>
                         <div id="collapse{{ingredient.ingredientID}}" class="accordion-collapse collapse" aria-labelledby="heading{{ingredient.ingredientID}}" data-bs-parent="#accordionExample">
                           <div class="accordion-body">
-                            <p>Quantity: {{ingredient.ingredientQuatity}} {{ingredient.quantityUnits}}</p>
                             {% if ingredient.nutrition %}
                             <p>Calories: {{ingredient.nutrition.calories}}</p>
                             <p>Total Fat: {{ingredient.nutrition.fat_total_g}}g</p>
@@ -55,12 +54,11 @@
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="heading{{ingredient.ingredientID}}">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ingredient.ingredientID}}" aria-expanded="false" aria-controls="collapse{{ingredient.ingredientID}}">
-                            {{ingredient.ingredientName}} | Exp. {{ingredient.ingredientExpirationDate}}
+                            {{ingredient.ingredientName}} | {{ingredient.ingredientQuatity}} {{ingredient.quantityUnits}} | Exp. {{ingredient.ingredientExpirationDate}}
                           </button>
                         </h2>
                         <div id="collapse{{ingredient.ingredientID}}" class="accordion-collapse collapse" aria-labelledby="heading{{ingredient.ingredientID}}" data-bs-parent="#accordionExample">
                           <div class="accordion-body">
-                            <p>Quantity: {{ingredient.ingredientQuatity}} {{ingredient.quantityUnits}}</p>
                             {% if ingredient.nutrition %}
                             <p>Calories: {{ingredient.nutrition.calories}}</p>
                             <p>Total Fat: {{ingredient.nutrition.fat_total_g}}g</p>
@@ -91,12 +89,11 @@
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="heading{{ingredient.ingredientID}}">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ingredient.ingredientID}}" aria-expanded="false" aria-controls="collapse{{ingredient.ingredientID}}">
-                            {{ingredient.ingredientName}} | Exp. {{ingredient.ingredientExpirationDate}}
+                            {{ingredient.ingredientName}} | {{ingredient.ingredientQuatity}} {{ingredient.quantityUnits}} | Exp. {{ingredient.ingredientExpirationDate}}
                           </button>
                         </h2>
                         <div id="collapse{{ingredient.ingredientID}}" class="accordion-collapse collapse" aria-labelledby="heading{{ingredient.ingredientID}}" data-bs-parent="#accordionExample">
                           <div class="accordion-body">
-                            <p>Quantity: {{ingredient.ingredientQuatity}} {{ingredient.quantityUnits}}</p>
                             {% if ingredient.nutrition %}
                             <p>Calories: {{ingredient.nutrition.calories}}</p>
                             <p>Total Fat: {{ingredient.nutrition.fat_total_g}}g</p>
@@ -125,12 +122,11 @@
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="heading{{ingredient.ingredientID}}">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ingredient.ingredientID}}" aria-expanded="false" aria-controls="collapse{{ingredient.ingredientID}}">
-                            {{ingredient.ingredientName}} | Exp. {{ingredient.ingredientExpirationDate}}
+                            {{ingredient.ingredientName}} | {{ingredient.ingredientQuatity}} {{ingredient.quantityUnits}} | Exp. {{ingredient.ingredientExpirationDate}}
                           </button>
                         </h2>
                         <div id="collapse{{ingredient.ingredientID}}" class="accordion-collapse collapse" aria-labelledby="heading{{ingredient.ingredientID}}" data-bs-parent="#accordionExample">
                           <div class="accordion-body">
-                            <p>Quantity: {{ingredient.ingredientQuatity}} {{ingredient.quantityUnits}}</p>
                             {% if ingredient.nutrition %}
                             <p>Calories: {{ingredient.nutrition.calories}}</p>
                             <p>Total Fat: {{ingredient.nutrition.fat_total_g}}g</p>
@@ -229,17 +225,17 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                <h5 class="modal-title" id="staticBackdropLabel">Are you sure?</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <form action="" method="POST">
-                  
+                <form id="deleteForm" action="/delete-fridge/" method="POST">
+                  This will remove the fridge and its ingridients permanently!!
                 </form>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Understood</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" form="deleteForm" value="Update" class="btn btn-danger">Understood</button>
               </div>
             </div>
           </div>
