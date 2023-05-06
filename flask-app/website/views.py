@@ -42,7 +42,8 @@ def create_fridge():
 @login_is_required
 def settings():
     userContactInfo = dbobj.getUserContactByUserID(userID=session['google_id'])
-    return render_template('settings.html', userName=session['name'])
+    name = userContactInfo['name']
+    return render_template('settings.html', userName=name)
 
 @views.route("/notifications")
 @login_is_required
