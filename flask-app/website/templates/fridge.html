@@ -69,10 +69,25 @@
                             {% else %}
                             <p>Unable to get nutrition data for "{{ingredient.ingredientName}}"</p>
                             {% endif %}
-                            <button type="button" class="btn btn-primary btn-sm">Update</button>
-                            <form id="deleteIngredient" action="/delete-ingredient">
-                              <button type="submit" form="deleteIngredient" value="Update" class="btn btn-danger btn-sm">Delete</button>
-                            </form>
+                            <div>
+                              <form id="updateForm" action="/update-ingredient/" method="POST">
+                                  <div class="input-group input-group-sm">
+                                    <input id="ingID" type="text" name="ingID"  value="{{ingredient.ingredientID}}" style="visibility: hidden; display: none;">
+                                    <input id="quantVal" name="quantVal" type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                                    <select id="quantType" name="quantType" class="form-select form-select-sm" aria-label=".form-select-sm example" required>
+                                      <option value="Lbs">Lbs</option>
+                                      <option value="Oz">Oz</option>
+                                      <option value="L">L</option>
+                                      <option value="Gallon">Gallon</option>
+                                      <option value="mL">mL</option>
+                                      <option value="Dozen">Dozen</option>
+                                      <option value="Count">Count</option>
+                                    </select>
+                                    <button type="submit" form="updateForm" value="Update" class="btn btn-primary btn-sm" style="height: 2rem;">Update</button>
+                                  </div>
+                              </form>
+                              <a href="/delete-ingredient/?ingID={{ingredient.ingredientID}}" class="btn btn-danger btn-sm m-1">Delete</a>
+                            </div>
                           </div>
                         </div>
                     </div>
@@ -167,7 +182,7 @@
             <label for="quantity">Quantity:</label>
             <input type="number" id="quantityValue" name="quantityValue" class="form-control" required>
             <select id="quantityType" name="quantityType" required>
-                <option value="" disabled selected hidden>Select Quantity</option>
+                <option value="" disabled selected hidden>Measure</option>
                 <option value=""></option>
                 <option value="Lbs">Lbs</option>
                 <option value="Oz">Oz</option>

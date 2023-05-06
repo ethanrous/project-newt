@@ -82,7 +82,6 @@ def fridge():
 
     ingridients = dbobj.getIngredientsInFridge(fridgeID=fid)
     session["currFridge"] = fid
-    print('ingridients', ingridients)
     collaboratorsID = dbobj.getFridgeCollaborators(fridgeID=fid)
     collaboratorsArr = [dbobj.getUserContactByUserID(c) for c in collaboratorsID]
     collaboratorsContactInfo = list(filter(lambda item: item is not None, collaboratorsArr))
@@ -152,3 +151,26 @@ def change_name():
     dbobj.updateUserName(userID=session['google_id'],newName=name)
     session['name'] = name
     return redirect("/settings")
+
+@views.route("/delete-ingredient/", methods=['GET','POST'])
+@login_is_required
+def delete_ingredient():
+    fid = session['currFridge']
+    ingID = request.args.get('ingID')
+    print('FID: ', fid)
+    print('INGID: ', ingID)
+    dbobj.removeIngredientFromFridge(fridgeID=fid, ingredientID=int(ingID))
+    return redirect("/fridge/?fid="+str(fid))
+
+
+@views.route("/update-ingredient/", methods=['GET','POST'])
+@login_is_required
+def update_ingredient():
+    fid = session['currFridge']
+    ingID = request.form.get("ingID")
+    quatityVal = request.form.get("quantVal")
+    quantityType = request.form.get("quantType")
+    print(ingID, quantityType, quatityVal)
+
+    return redirect("/fridge/?fid="+str(fid))
+

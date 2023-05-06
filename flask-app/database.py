@@ -131,6 +131,12 @@ class newtdb:
         print(f"Updating name of user {userID} with name {self.getUserContactByUserID(userID)['name']} to {newName}")
         self.userscol.update_one( {"_id": userID }, { "$set": { "name": newName } } )
 
+    def getFridgesByUserID(self, userID):
+        collabs = self.getCollabFridgesByUserID(userID=userID)
+        owned = self.getOwnedFridgesByUserID(userID=userID)
+        fridges = collabs + owned
+        return fridges
+
     # CAUTION - THIS DELETES ALL USERS IN THE DATABASE
     def dropUsers(self):
         self.userscol.drop()
