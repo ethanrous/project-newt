@@ -1,18 +1,14 @@
 import os
-import pathlib
+import time
+
+import google.auth.transport.requests
 import requests
-from flask import Flask, session, abort, redirect, request
+from flask import Blueprint, abort, redirect, render_template, request, session
 from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
-import google.auth.transport.requests
 
-from flask import Blueprint, render_template, redirect, url_for, request, flash
 from . import dbobj
-import time
-from dotenv import load_dotenv
-
-load_dotenv()
 
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 
