@@ -110,7 +110,6 @@ class newtdb:
     def getOwnedFridgesByUserID(self, userID):
         fridges = list(self.userscol.find( { "_id": userID }, { "_id": 0, "ownedFridges": 1 } ) )
         if fridges != [] and fridges != [{}]:
-            print(f"DOOOD: {fridges}")
             return fridges[0]['ownedFridges']
         return []
 
@@ -131,7 +130,6 @@ class newtdb:
         return self.userscol.find_one( { "_id": userID }, { "_id": 0, "name": 1, "email": 1} )
 
     def updateUserName(self, userID, newName):
-        print(f"Updating name of user {userID} with name {self.getUserContactByUserID(userID)['name']} to {newName}")
         self.userscol.update_one( {"_id": userID }, { "$set": { "name": newName } } )
 
     def getFridgesByUserID(self, userID):
