@@ -40,6 +40,7 @@ def create_fridge():
 @views.route("/settings")
 @login_is_required
 def settings():
+    userContactInfo = dbobj.getUserContactByUserID(userID=session['google_id'])
     return render_template('settings.html', userName=session['name'])
 
 @views.route("/notifications")
@@ -79,13 +80,10 @@ def fridge():
 
     ingridients = dbobj.getIngredientsInFridge(fridgeID=fid)
     session["currFridge"] = fid
-
+    print('ingridients', ingridients)
     collaboratorsID = dbobj.getFridgeCollaborators(fridgeID=fid)
-    print('collaboratorsID: ', collaboratorsID)
     collaboratorsArr = [dbobj.getUserContactByUserID(c) for c in collaboratorsID]
-    print('collaboratorsArr', collaboratorsArr)
     collaboratorsContactInfo = list(filter(lambda item: item is not None, collaboratorsArr))
-    print('collaboratorsContactInfo', collaboratorsContactInfo)
 
     for ingridient in ingridients:
         _, ingredientData = dbobj.getIngredientDataFromName(ingredientName=ingridient['ingredientName'])
@@ -149,7 +147,6 @@ def delete_fridge():
 @login_is_required
 def change_name():
     name = request.form.get('name')
-    print("NAME: ",name)
     dbobj.updateUserName(userID=session['google_id'],newName=name)
-
+    session['name'] = name
     return redirect("/settings")

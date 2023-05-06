@@ -69,6 +69,10 @@
                             {% else %}
                             <p>Unable to get nutrition data for "{{ingredient.ingredientName}}"</p>
                             {% endif %}
+                            <button type="button" class="btn btn-primary btn-sm">Update</button>
+                            <form id="deleteIngredient" action="/delete-ingredient">
+                              <button type="submit" form="deleteIngredient" value="Update" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
                           </div>
                         </div>
                     </div>
@@ -94,6 +98,7 @@
                         </h2>
                         <div id="collapse{{ingredient.ingredientID}}" class="accordion-collapse collapse" aria-labelledby="heading{{ingredient.ingredientID}}" data-bs-parent="#accordionExample">
                           <div class="accordion-body">
+                            
                             {% if ingredient.nutrition %}
                             <p>Calories: {{ingredient.nutrition.calories}}</p>
                             <p>Total Fat: {{ingredient.nutrition.fat_total_g}}g</p>
@@ -126,7 +131,7 @@
                           </button>
                         </h2>
                         <div id="collapse{{ingredient.ingredientID}}" class="accordion-collapse collapse" aria-labelledby="heading{{ingredient.ingredientID}}" data-bs-parent="#accordionExample">
-                          <div class="accordion-body">
+                          <div class="accordion-body">                            
                             {% if ingredient.nutrition %}
                             <p>Calories: {{ingredient.nutrition.calories}}</p>
                             <p>Total Fat: {{ingredient.nutrition.fat_total_g}}g</p>
@@ -139,6 +144,7 @@
                             {% endif %}
                           </div>
                         </div>
+                        
                     </div>
                     {% endif %}
                     {% endfor %}
