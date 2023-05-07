@@ -138,9 +138,9 @@ def delete_ingredient():
 @login_is_required
 def update_ingredient():
     fid = session['currFridge']
-    ingID = int(request.form.get("ingID"))
-    quatityVal = int(request.form.get("quantVal"))
-    quantityType = request.form.get("quantType")
+    ingID = int(request.args.get('ingID'))
+    quatityVal = int(request.form.get("quantVal-"+str(ingID)))
+    quantityType = request.form.get("quantType-"+str(ingID))
 
     dbobj.updateIngredient(fridgeID=fid, ingredientID=ingID, newQuantity=quatityVal, newUnits=quantityType)
 

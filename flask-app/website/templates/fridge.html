@@ -35,6 +35,25 @@
                             {% else %}
                             <p>Unable to get nutrition data for "{{ingredient.ingredientName}}"</p>
                             {% endif %}
+                            <div>
+                              <form id="updateForm-{{ingredient.ingredientID}}" action="/update-ingredient/?ingID={{ingredient.ingredientID}}" method="POST">
+                                  <div class="input-group input-group-sm">
+                                    <input id="ingID" type="text" name="ingID"  value="{{ingredient.ingredientID}}" style="visibility: hidden; display: none;">
+                                    <input id="quantVal" name="quantVal-{{ingredient.ingredientID}}" type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                                    <select id="quantType" name="quantType-{{ingredient.ingredientID}}" class="form-select form-select-sm" aria-label=".form-select-sm example" required>
+                                      <option value="Lbs">Lbs</option>
+                                      <option value="Oz">Oz</option>
+                                      <option value="L">L</option>
+                                      <option value="Gallon">Gallon</option>
+                                      <option value="mL">mL</option>
+                                      <option value="Dozen">Dozen</option>
+                                      <option value="Count">Count</option>
+                                    </select>
+                                    <button type="submit" form="updateForm-{{ingredient.ingredientID}}" value="Update" class="btn btn-primary btn-sm" style="height: 2rem;">Update</button>
+                                  </div>
+                              </form>
+                              <a href="/delete-ingredient/?ingID={{ingredient.ingredientID}}" class="btn btn-danger btn-sm m-1">Delete</a>
+                            </div>
                           </div>
                         </div>
                     </div>
@@ -70,11 +89,11 @@
                             <p>Unable to get nutrition data for "{{ingredient.ingredientName}}"</p>
                             {% endif %}
                             <div>
-                              <form id="updateForm" action="/update-ingredient/" method="POST">
+                              <form id="updateForm-{{ingredient.ingredientID}}" action="/update-ingredient/?ingID={{ingredient.ingredientID}}" method="POST">
                                   <div class="input-group input-group-sm">
                                     <input id="ingID" type="text" name="ingID"  value="{{ingredient.ingredientID}}" style="visibility: hidden; display: none;">
-                                    <input id="quantVal" name="quantVal" type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
-                                    <select id="quantType" name="quantType" class="form-select form-select-sm" aria-label=".form-select-sm example" required>
+                                    <input id="quantVal" name="quantVal-{{ingredient.ingredientID}}" type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                                    <select id="quantType" name="quantType-{{ingredient.ingredientID}}" class="form-select form-select-sm" aria-label=".form-select-sm example" required>
                                       <option value="Lbs">Lbs</option>
                                       <option value="Oz">Oz</option>
                                       <option value="L">L</option>
@@ -83,7 +102,7 @@
                                       <option value="Dozen">Dozen</option>
                                       <option value="Count">Count</option>
                                     </select>
-                                    <button type="submit" form="updateForm" value="Update" class="btn btn-primary btn-sm" style="height: 2rem;">Update</button>
+                                    <button type="submit" form="updateForm-{{ingredient.ingredientID}}" value="Update" class="btn btn-primary btn-sm" style="height: 2rem;">Update</button>
                                   </div>
                               </form>
                               <a href="/delete-ingredient/?ingID={{ingredient.ingredientID}}" class="btn btn-danger btn-sm m-1">Delete</a>
@@ -124,6 +143,25 @@
                             {% else %}
                             <p>Unable to get nutrition data for "{{ingredient.ingredientName}}"</p>
                             {% endif %}
+                            <div>
+                              <form id="updateForm-{{ingredient.ingredientID}}" action="/update-ingredient/?ingID={{ingredient.ingredientID}}" method="POST">
+                                  <div class="input-group input-group-sm">
+                                    <input id="ingID" type="text" name="ingID"  value="{{ingredient.ingredientID}}" style="visibility: hidden; display: none;">
+                                    <input id="quantVal" name="quantVal-{{ingredient.ingredientID}}" type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                                    <select id="quantType" name="quantType-{{ingredient.ingredientID}}" class="form-select form-select-sm" aria-label=".form-select-sm example" required>
+                                      <option value="Lbs">Lbs</option>
+                                      <option value="Oz">Oz</option>
+                                      <option value="L">L</option>
+                                      <option value="Gallon">Gallon</option>
+                                      <option value="mL">mL</option>
+                                      <option value="Dozen">Dozen</option>
+                                      <option value="Count">Count</option>
+                                    </select>
+                                    <button type="submit" form="updateForm-{{ingredient.ingredientID}}" value="Update" class="btn btn-primary btn-sm" style="height: 2rem;">Update</button>
+                                  </div>
+                              </form>
+                              <a href="/delete-ingredient/?ingID={{ingredient.ingredientID}}" class="btn btn-danger btn-sm m-1">Delete</a>
+                            </div>
                           </div>
                         </div>
                     </div>
@@ -157,6 +195,25 @@
                             {% else %}
                             <p>Unable to get nutrition data for "{{ingredient.ingredientName}}"</p>
                             {% endif %}
+                            <div>
+                              <form id="updateForm-{{ingredient.ingredientID}}" action="/update-ingredient/?ingID={{ingredient.ingredientID}}" method="POST">
+                                  <div class="input-group input-group-sm">
+                                    <input id="ingID" type="text" name="ingID"  value="{{ingredient.ingredientID}}" style="visibility: hidden; display: none;">
+                                    <input id="quantVal" name="quantVal-{{ingredient.ingredientID}}" type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                                    <select id="quantType" name="quantType-{{ingredient.ingredientID}}" class="form-select form-select-sm" aria-label=".form-select-sm example" required>
+                                      <option value="Lbs">Lbs</option>
+                                      <option value="Oz">Oz</option>
+                                      <option value="L">L</option>
+                                      <option value="Gallon">Gallon</option>
+                                      <option value="mL">mL</option>
+                                      <option value="Dozen">Dozen</option>
+                                      <option value="Count">Count</option>
+                                    </select>
+                                    <button type="submit" form="updateForm-{{ingredient.ingredientID}}" value="Update" class="btn btn-primary btn-sm" style="height: 2rem;">Update</button>
+                                  </div>
+                              </form>
+                              <a href="/delete-ingredient/?ingID={{ingredient.ingredientID}}" class="btn btn-danger btn-sm m-1">Delete</a>
+                            </div>
                           </div>
                         </div>
                         
