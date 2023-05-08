@@ -10,8 +10,8 @@ def main():
     dbobj.dropUsers()
     dbobj.dropFridges()
     dbobj.dropIngredients()
+    dbobj.dropNutritionCache()
 
-    dbobj.newIngredient("Apple", "2023-01-01", 1, "Count", "Freezer")
     return
     userID = dbobj.getUserIDFromEmail(userEmail)
     fridges = dbobj.getOwnedFridgesByUserID(userID=userID)

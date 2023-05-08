@@ -17,12 +17,12 @@
             </thead>
             <tbody>
 
-                {% for ingridient in ingridients %}
+                {% for ingredient in ingredients %}
                     <tr>
                         <th scope="row">{{loop.index}}</th>
-                        <td>{{ingridient.ingredientName}}</td>
-                        <td>{{ingridient.fridgeName}}</td>
-                        <td>{{ingridient.ingredientExpirationDate}}</td>
+                        <td>{{ingredient.name}}</td>
+                        <td>{{ingredient.fridgeName}}</td>
+                        <td>{{ingredient.expirationDate}}</td>
                     </tr>
                 {% endfor %}
             </tbody>

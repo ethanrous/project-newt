@@ -1,7 +1,7 @@
 function buildRecipe(recipeObj){
     let imgUrl = recipeObj.image
     let nameStr = recipeObj.label
-    let ingridientsArr = recipeObj.ingredientLines
+    let ingredientsArr = recipeObj.ingredientLines
     let timeInt = recipeObj.totalTime
     let url = recipeObj.url
 
@@ -28,7 +28,7 @@ function buildRecipe(recipeObj){
                         Cook Time: ${timeInt}
                     </h6>
                     <h6 class="card-subtitle mb-2 text-muted">
-                    Ingridients:
+                    ingredients:
                     </h6>
 
                     <ul class="list-group list-group-horizontal position-relative overflow-auto w-100"></ul></div></div></div></div>`
@@ -38,37 +38,37 @@ function buildRecipe(recipeObj){
     let card = cardContainer.lastChild
     let cardBody = card.lastChild.lastChild.lastChild.lastChild
     let str = ``
-    ingridientsArr.map(ingridient => {
-        ingridient = ingridient.toLowerCase();
-        ingridient = ingridient.replace(/\d+/g, '')
-        ingridient = ingridient.replace("-", '')
-        ingridient = ingridient.replace("/", '')
-        ingridient = ingridient.replace(".", '')
+    ingredientsArr.map(ingredient => {
+        ingredient = ingredient.toLowerCase();
+        ingredient = ingredient.replace(/\d+/g, '')
+        ingredient = ingredient.replace("-", '')
+        ingredient = ingredient.replace("/", '')
+        ingredient = ingredient.replace(".", '')
 
-        // ingridient = ingridient.replace("tsp", '')
-        // ingridient = ingridient.replace("lbs", '')
-        // ingridient = ingridient.replace("tbs", '')
-        // ingridient = ingridient.replace("cup", '')
-        // ingridient = ingridient.replace("pound", '')
-        // ingridient = ingridient.replace("cups", '')
-        // ingridient = ingridient.replace("pounds", '')
-        // ingridient = ingridient.replace(" g ", '')
-        // ingridient = ingridient.replace("g ", '')
-        // ingridient = ingridient.replace("grams", '')
-        // ingridient = ingridient.replace("kg", '')
-        // ingridient = ingridient.replace("tablespoons", '')
-        // ingridient = ingridient.replace("tbsp", '')
-        // ingridient = ingridient.replace("oz", '')
-        // ingridient = ingridient.replace("ounces", '')
-        // ingridient = ingridient.replace("teaspoon", '')
-        // ingridient = ingridient.replace("tablespoon", '')
-        // ingridient = ingridient.replace("ml", '')
-        
+        // ingredient = ingredient.replace("tsp", '')
+        // ingredient = ingredient.replace("lbs", '')
+        // ingredient = ingredient.replace("tbs", '')
+        // ingredient = ingredient.replace("cup", '')
+        // ingredient = ingredient.replace("pound", '')
+        // ingredient = ingredient.replace("cups", '')
+        // ingredient = ingredient.replace("pounds", '')
+        // ingredient = ingredient.replace(" g ", '')
+        // ingredient = ingredient.replace("g ", '')
+        // ingredient = ingredient.replace("grams", '')
+        // ingredient = ingredient.replace("kg", '')
+        // ingredient = ingredient.replace("tablespoons", '')
+        // ingredient = ingredient.replace("tbsp", '')
+        // ingredient = ingredient.replace("oz", '')
+        // ingredient = ingredient.replace("ounces", '')
+        // ingredient = ingredient.replace("teaspoon", '')
+        // ingredient = ingredient.replace("tablespoon", '')
+        // ingredient = ingredient.replace("ml", '')
 
-        if (ingridient.length > 28){
-            ingridient = ingridient.slice(0,28) + "[...]"
+
+        if (ingredient.length > 28){
+            ingredient = ingredient.slice(0,28) + "[...]"
         }
-        let ing = `<li class="list-group-item" style="width: 200rem">${ingridient}</li>`
+        let ing = `<li class="list-group-item" style="width: 200rem">${ingredient}</li>`
         str = str + ing
     })
     cardBody.innerHTML = cardBody.innerHTML+str
@@ -111,7 +111,7 @@ async function fetchRecipes(){
         console.log(res)
         for (let i = 0; i < res.hits.length; i++){
             addRecipe(res.hits[i].recipe)
-            
+
         }
     } catch (error) {
         console.error(error);

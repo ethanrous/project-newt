@@ -20,14 +20,14 @@ import requests
 """             "id": "",                    """
 """             "owner_id": "",              """
 """             "collaborators":["ids"],     """
-"""             "ingridients": ["ids"]       """
+"""             "ingredients": ["ids"]       """
 """         },                               """
-"""         "ingridients": {                 """
+"""         "ingredients": {                 """
 """             "id": 0,                     """
 """             "name": "",                  """
 """             "expiration_date": "",       """
 """             "dateAdded": "",             """
-"""             "quatity": ""                """
+"""             "quantity": ""               """
 """             "location": ""               """
 """         }                                """
 """         "nutritionCache": {              """
@@ -52,6 +52,8 @@ class newtdb:
         self.ingredientscol = self.mongoNewt["ingredients"]
         self.nutritioncol = self.mongoNewt["nutritionCache"]
 
+        self.nutritionNoResCheck()
+
         self.nutritionApiKey = os.getenv('NUTRITION_API_KEY')
 
     ##############################
@@ -73,17 +75,15 @@ class newtdb:
     #############
 
     def newUser(self, userID, userName, email):
-        newUserData = {"_id": userID, "name": userName, "email": email, "ownedFridges": [], "sharedFridges": []}
-        self.userscol.insert_one(newUserData)
+        self.userscol.insert_one(
+            { "_id": userID, "name": userName, "email": email, "ownedFridges": [], "sharedFridges": [] }
+        )
 
     def doesUserExist(self, userID):
-        if self.userscol.find_one( { "_id": userID } ):
-            return True
-        return False
+        return self.userscol.find_one( { "_id": userID } ) != None
 
     def getUserContactByUserID(self, userID):
-        contactInfo = self.userscol.find_one({ "_id": userID }, { "_id": 0, "name": 1, "email": 1})
-        return contactInfo
+        return self.userscol.find_one({ "_id": userID }, { "_id": 0, "name": 1, "email": 1})
 
     def addOwnedFridgeToUser(self, userID, fridgeID):
         self.userscol.update_one(
@@ -122,6 +122,21 @@ class newtdb:
         else:
             return []
 
+    def getAllIngredientsByUserID(self, userID):
+        usersFridges = self.getOwnedFridgesByUserID(userID)
+        usersFridges.extend(self.getCollabFridgesByUserID(userID))
+
+        ingredients = []
+        for fridge in usersFridges:
+            fridgeName = self.getFridgeData(fridgeID=fridge)['fridgeName']
+            for ingredient in self.getIngredientsInFridge(fridgeID=fridge):
+                ingredient['fridgeName'] = fridgeName
+                ingredients.append(ingredient)
+
+        ingredients = sorted(ingredients, key=lambda ing : ing['expirationDate'], reverse=False)
+
+        return ingredients
+
     def getUserIDFromEmail(self, email):
         uid = self.userscol.find_one( { "email": email }, { "_id": 1 } )
         if uid != None:
@@ -159,8 +174,7 @@ class newtdb:
         self.addOwnedFridgeToUser(ownerID, fridgeID)
 
     def getFridgeData(self, fridgeID):
-        fridge = self.fridgescol.find_one( { "_id": fridgeID } )
-        return fridge
+        return self.fridgescol.find_one( { "_id": fridgeID } )
 
     def addUserToFridge(self, userID, fridgeID):
         self.fridgescol.update_one(
@@ -180,18 +194,12 @@ class newtdb:
             { "$push": { "ingredients": newIngredientID } }
         )
 
-    def updateIngredient(self, ingredientID, newQuantity, newUnits):
-        self.fridgescol.update_one(
-            { "_id": ingredientID },
-            { "$set": { "quatity": newQuantity } },
-            { "$set": { "quatityUnits": newUnits } }
-        )
-
     def removeIngredientFromFridge(self, fridgeID, ingredientID):
         self.fridgescol.update_one(
             { "_id": fridgeID },
             { "$pull": { "ingredients": ingredientID } }
         )
+        self.deleteIngredient(ingredientID)
 
     def getIngredientsInFridge(self, fridgeID):
         ingredientIDs = self.fridgescol.find_one( { "_id": fridgeID }, { "_id": 0, "ingredients": 1 } )['ingredients']
@@ -236,16 +244,28 @@ class newtdb:
     ### INGREDIENTS ###
     ###################
 
-    def newIngredient(self, name, expirationDate, quatity, quantityUnits, location):
+    def newIngredient(self, name, expirationDate, quantity, quantityUnits, location):
         newIngredientData = {
             "name": name,
             "expirationDate": expirationDate,
             "dateAdded": datetime.date.today().strftime("%Y-%m-%d"),
-            "quatity": quatity,
+            "quantity": quantity,
             "quantityUnits": quantityUnits, # Count, lbs, gallons, etc.
-            "location": location
+            "location": location,
+            "nutritionID": str(self.getIngredientDataFromName(name)["_id"])
         }
         return str(self.ingredientscol.insert_one(newIngredientData).inserted_id)
+
+    def updateIngredient(self, ingredientID, newQuantity, newUnits):
+        ingredientID = ObjectId(ingredientID)
+        self.ingredientscol.update_one(
+            { "_id": ingredientID },
+            { "$set": { "quantity": newQuantity, "quantityUnits": newUnits } },
+        )
+
+    def deleteIngredient(self, ingredientID):
+        ingredientID = ObjectId(ingredientID)
+        self.ingredientscol.delete_one({ "_id": ingredientID })
 
     # CAUTION - THIS DELETES ALL INGREDIENTS IN THE DATABASE
     def dropIngredients(self):
@@ -257,70 +277,74 @@ class newtdb:
     ### NUTRITION CACHE ###
     #######################
 
-    def getIngredientDataFromName(self, ingredientName):
+    def nutritionNoResCheck(self):
+        if not self.nutritioncol.find_one( { "name": "NO-RES" } ):
+            newIngredientData = {
+                "name": "NO-RES",
+                "aliases": [],
+                "nutrition": None
+            }
+            self.nutritioncol.insert_one(newIngredientData)
 
+    def getIngredientDataFromName(self, ingredientName):
         ingredientData = self.nutritioncol.find_one( { "aliases": ingredientName } )
 
-        if ingredientData == None:
+        if ingredientData != None:
+            return ingredientData
 
-            foodApiUrl = "https://nutrition-by-api-ninjas.p.rapidapi.com/v1/nutrition"
-            foodApiHeaders = {
-                "X-RapidAPI-Key": self.nutritionApiKey,
-                "X-RapidAPI-Host": "nutrition-by-api-ninjas.p.rapidapi.com"
-            }
+        else:
+            apiIngredientData = self.callNutritionApi(ingredientName)
 
-            # Get food data from api
-            querystring = {"query": ingredientName}
-
-            res = requests.request("GET", foodApiUrl, headers=foodApiHeaders, params=querystring).json()
-
-            if res == []:
-                if not self.nutritioncol.find_one( { "name": "NO-RES" } ):
-                    newIngredientData = {
-                        "name": "NO-RES",
-                        "aliases": [],
-                        "nutrition": None
-                    }
-                    self.nutritioncol.insert_one(newIngredientData)
-
+            if apiIngredientData == []:
                 self.nutritioncol.update_one(
                     { "name": "NO-RES" },
                     { "$push": { "aliases": ingredientName } }
                 )
-                return None, None
 
-            apiIngredientData = res[0]
-            apiIngredientName = apiIngredientData['name']
-
-            del apiIngredientData['name']
-
-            if self.nutritioncol.find_one( { "name": apiIngredientName } ):
-                self.nutritioncol.update_one(
-                    { "name": apiIngredientName },
-                    { "$push": { "aliases": ingredientName } }
-                )
             else:
-                newIngredientData = {
-                    "name": apiIngredientName,
-                    "aliases": [ingredientName],
-                    "nutrition": apiIngredientData
-                }
-                self.nutritioncol.insert_one(newIngredientData)
-            ingredientData = apiIngredientData
-            cleanIngredientName = apiIngredientName
+                apiIngredientName = apiIngredientData['name']
+                del apiIngredientData['name']
 
-        elif ingredientData['name'] == "NO_RES":
-            cleanIngredientName = None
-            ingredientData = []
+                if self.nutritioncol.find_one( { "name": apiIngredientName } ):
+                    self.nutritioncol.update_one(
+                        { "name": apiIngredientName },
+                        { "$push": { "aliases": ingredientName } }
+                    )
 
-        else:
-            cleanIngredientName = ingredientData['name']
-            ingredientData = ingredientData['nutrition']
+                else:
+                    newIngredientData = {
+                        "name": apiIngredientName,
+                        "aliases": [ingredientName],
+                        "nutrition": apiIngredientData
+                    }
 
-        return cleanIngredientName, ingredientData
+                    self.nutritioncol.insert_one(newIngredientData)
+
+        return self.nutritioncol.find_one( { "aliases": ingredientName } )
+
+    def getIngredientDataFromID(self, ingredientID):
+        return self.nutritioncol.find_one( { "_id": ObjectId(ingredientID) } )
+
+    def callNutritionApi(self, ingredientName):
+        foodApiUrl = "https://nutrition-by-api-ninjas.p.rapidapi.com/v1/nutrition"
+        foodApiHeaders = {
+            "X-RapidAPI-Key": self.nutritionApiKey,
+            "X-RapidAPI-Host": "nutrition-by-api-ninjas.p.rapidapi.com"
+        }
+
+        querystring = {"query": ingredientName}
+
+        res = requests.request("GET", foodApiUrl, headers=foodApiHeaders, params=querystring).json()
+
+        if not res == []:
+            res = res[0]
+
+        return res
+
 
     # CAUTION - THIS DELETES ALL NUTRITION CACHE DATA IN THE DATABASE
     def dropNutritionCache(self):
         self.nutritioncol.drop()
         self.nutritioncol = self.mongoNewt["nutritionCache"]
+        self.nutritionNoResCheck()
 

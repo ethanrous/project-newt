@@ -14,14 +14,14 @@
             <div class="freezer">
                 <div class="accordion" id="accordionFreezer">
 
-                    {% for ingredient in ingridients %}
+                    {% for ingredient in ingredients %}
                     {% if ingredient.location == "freezer"%}
 
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="heading{{ingredient._id}}">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapse{{ingredient._id}}" aria-expanded="false" aria-controls="collapse{{ingredient._id}}">
-                            {{ingredient.name}} | {{ingredient.quatity}} {{ingredient.quantityUnits}} | Exp.
+                            {{ingredient.name}} | {{ingredient.quantity}} {{ingredient.quantityUnits}} | Exp.
                             {{ingredient.expirationDate}}
                           </button>
                         </h2>
@@ -39,11 +39,13 @@
                             <p>Unable to get nutrition data for "{{ingredient.name}}"</p>
                             {% endif %}
                             <div>
-                              <form id="updateForm-{{ingredient.ingredientID}}" action="/update-ingredient/?ingID={{ingredient.ingredientID}}" method="POST">
+                              <form id="updateForm-{{ingredient._id}}" action="/update-ingredient/?ingID={{ingredient._id}}" method="POST">
                                   <div class="input-group input-group-sm">
-                                    <input id="ingID" type="text" name="ingID"  value="{{ingredient.ingredientID}}" style="visibility: hidden; display: none;">
-                                    <input id="quantVal" name="quantVal-{{ingredient.ingredientID}}" type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
-                                    <select id="quantType" name="quantType-{{ingredient.ingredientID}}" class="form-select form-select-sm" aria-label=".form-select-sm example" required>
+                                    <input id="ingID" type="text" name="ingID" value="{{ingredient._id}}" style="visibility: hidden; display: none;">
+                                    <input id="quantVal" name="quantVal-{{ingredient._id}}" type="number" class="form-control"
+                                      aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                                    <select id="quantType" name="quantType-{{ingredient._id}}" class="form-select form-select-sm"
+                                      aria-label=".form-select-sm example" required>
                                       <option value="Lbs">Lbs</option>
                                       <option value="Oz">Oz</option>
                                       <option value="L">L</option>
@@ -52,10 +54,11 @@
                                       <option value="Dozen">Dozen</option>
                                       <option value="Count">Count</option>
                                     </select>
-                                    <button type="submit" form="updateForm-{{ingredient.ingredientID}}" value="Update" class="btn btn-primary btn-sm" style="height: 2rem;">Update</button>
+                                    <button type="submit" form="updateForm-{{ingredient._id}}" value="Update" class="btn btn-primary btn-sm"
+                                      style="height: 2rem;">Update</button>
                                   </div>
                               </form>
-                              <a href="/delete-ingredient/?ingID={{ingredient.ingredientID}}" class="btn btn-danger btn-sm m-1">Delete</a>
+                              <a href="/delete-ingredient/?ingID={{ingredient._id}}" class="btn btn-danger btn-sm m-1">Delete</a>
                             </div>
                           </div>
                         </div>
@@ -71,13 +74,13 @@
             <div class="fridge-section">
                 <div class="accordion" id="accordionFridge">
 
-                    {% for ingredient in ingridients %}
+                    {% for ingredient in ingredients %}
                     {% if ingredient.location == "fridge"%}
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="heading{{ingredient._id}}">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapse{{ingredient._id}}" aria-expanded="false" aria-controls="collapse{{ingredient._id}}">
-                            {{ingredient.name}} | {{ingredient.quatity}} {{ingredient.quantityUnits}} | Exp.
+                            {{ingredient.name}} | {{ingredient.quantity}} {{ingredient.quantityUnits}} | Exp.
                             {{ingredient.expirationDate}}
                           </button>
                         </h2>
@@ -95,11 +98,13 @@
                             <p>Unable to get nutrition data for "{{ingredient.name}}"</p>
                             {% endif %}
                             <div>
-                              <form id="updateForm-{{ingredient.ingredientID}}" action="/update-ingredient/?ingID={{ingredient.ingredientID}}" method="POST">
+                              <form id="updateForm-{{ingredient._id}}" action="/update-ingredient/?ingID={{ingredient._id}}" method="POST">
                                   <div class="input-group input-group-sm">
-                                    <input id="ingID" type="text" name="ingID"  value="{{ingredient.ingredientID}}" style="visibility: hidden; display: none;">
-                                    <input id="quantVal" name="quantVal-{{ingredient.ingredientID}}" type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
-                                    <select id="quantType" name="quantType-{{ingredient.ingredientID}}" class="form-select form-select-sm" aria-label=".form-select-sm example" required>
+                                    <input id="ingID" type="text" name="ingID" value="{{ingredient._id}}" style="visibility: hidden; display: none;">
+                                    <input id="quantVal" name="quantVal-{{ingredient._id}}" type="number" class="form-control"
+                                      aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                                    <select id="quantType" name="quantType-{{ingredient._id}}" class="form-select form-select-sm"
+                                      aria-label=".form-select-sm example" required>
                                       <option value="Lbs">Lbs</option>
                                       <option value="Oz">Oz</option>
                                       <option value="L">L</option>
@@ -108,7 +113,8 @@
                                       <option value="Dozen">Dozen</option>
                                       <option value="Count">Count</option>
                                     </select>
-                                    <button type="submit" form="updateForm-{{ingredient.ingredientID}}" value="Update" class="btn btn-primary btn-sm" style="height: 2rem;">Update</button>
+                                    <button type="submit" form="updateForm-{{ingredient._id}}" value="Update" class="btn btn-primary btn-sm"
+                                      style="height: 2rem;">Update</button>
                                   </div>
                               </form>
                               <a href="/delete-ingredient/?ingID={{ingredient._id}}" class="btn btn-danger btn-sm m-1">Delete</a>
@@ -128,13 +134,13 @@
             <div class="freezer-door">
                 <div class="accordion" id="accordionFreezerDoor">
 
-                    {% for ingredient in ingridients %}
+                    {% for ingredient in ingredients %}
                     {% if ingredient.location == "freezer-door"%}
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="heading{{ingredient._id}}">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapse{{ingredient._id}}" aria-expanded="false" aria-controls="collapse{{ingredient._id}}">
-                            {{ingredient.name}} | {{ingredient.quatity}} {{ingredient.quantityUnits}} | Exp.
+                            {{ingredient.name}} | {{ingredient.quantity}} {{ingredient.quantityUnits}} | Exp.
                             {{ingredient.expirationDate}}
                           </button>
                         </h2>
@@ -153,11 +159,13 @@
                             <p>Unable to get nutrition data for "{{ingredient.name}}"</p>
                             {% endif %}
                             <div>
-                              <form id="updateForm-{{ingredient.ingredientID}}" action="/update-ingredient/?ingID={{ingredient.ingredientID}}" method="POST">
+                              <form id="updateForm-{{ingredient._id}}" action="/update-ingredient/?ingID={{ingredient._id}}" method="POST">
                                   <div class="input-group input-group-sm">
-                                    <input id="ingID" type="text" name="ingID"  value="{{ingredient.ingredientID}}" style="visibility: hidden; display: none;">
-                                    <input id="quantVal" name="quantVal-{{ingredient.ingredientID}}" type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
-                                    <select id="quantType" name="quantType-{{ingredient.ingredientID}}" class="form-select form-select-sm" aria-label=".form-select-sm example" required>
+                                    <input id="ingID" type="text" name="ingID" value="{{ingredient._id}}" style="visibility: hidden; display: none;">
+                                    <input id="quantVal" name="quantVal-{{ingredient._id}}" type="number" class="form-control"
+                                      aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                                    <select id="quantType" name="quantType-{{ingredient._id}}" class="form-select form-select-sm"
+                                      aria-label=".form-select-sm example" required>
                                       <option value="Lbs">Lbs</option>
                                       <option value="Oz">Oz</option>
                                       <option value="L">L</option>
@@ -166,10 +174,11 @@
                                       <option value="Dozen">Dozen</option>
                                       <option value="Count">Count</option>
                                     </select>
-                                    <button type="submit" form="updateForm-{{ingredient.ingredientID}}" value="Update" class="btn btn-primary btn-sm" style="height: 2rem;">Update</button>
+                                    <button type="submit" form="updateForm-{{ingredient._id}}" value="Update" class="btn btn-primary btn-sm"
+                                      style="height: 2rem;">Update</button>
                                   </div>
                               </form>
-                              <a href="/delete-ingredient/?ingID={{ingredient.ingredientID}}" class="btn btn-danger btn-sm m-1">Delete</a>
+                              <a href="/delete-ingredient/?ingID={{ingredient._id}}" class="btn btn-danger btn-sm m-1">Delete</a>
                             </div>
                           </div>
                         </div>
@@ -184,13 +193,13 @@
             <div class="fridge-door">
                 <div class="accordion" id="accordionFridgeDoor">
 
-                    {% for ingredient in ingridients %}
+                    {% for ingredient in ingredients %}
                     {% if ingredient.location == "fridge-door"%}
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="heading{{ingredient._id}}">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapse{{ingredient._id}}" aria-expanded="false" aria-controls="collapse{{ingredient._id}}">
-                            {{ingredient.name}} | {{ingredient.quatity}} {{ingredient.quantityUnits}} | Exp.
+                            {{ingredient.name}} | {{ingredient.quantity}} {{ingredient.quantityUnits}} | Exp.
                             {{ingredient.expirationDate}}
                           </button>
                         </h2>
@@ -208,11 +217,13 @@
                             <p>Unable to get nutrition data for "{{ingredient.name}}"</p>
                             {% endif %}
                             <div>
-                              <form id="updateForm-{{ingredient.ingredientID}}" action="/update-ingredient/?ingID={{ingredient.ingredientID}}" method="POST">
+                              <form id="updateForm-{{ingredient._id}}" action="/update-ingredient/?ingID={{ingredient._id}}" method="POST">
                                   <div class="input-group input-group-sm">
-                                    <input id="ingID" type="text" name="ingID"  value="{{ingredient.ingredientID}}" style="visibility: hidden; display: none;">
-                                    <input id="quantVal" name="quantVal-{{ingredient.ingredientID}}" type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
-                                    <select id="quantType" name="quantType-{{ingredient.ingredientID}}" class="form-select form-select-sm" aria-label=".form-select-sm example" required>
+                                    <input id="ingID" type="text" name="ingID" value="{{ingredient._id}}" style="visibility: hidden; display: none;">
+                                    <input id="quantVal" name="quantVal-{{ingredient._id}}" type="number" class="form-control"
+                                      aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                                    <select id="quantType" name="quantType-{{ingredient._id}}" class="form-select form-select-sm"
+                                      aria-label=".form-select-sm example" required>
                                       <option value="Lbs">Lbs</option>
                                       <option value="Oz">Oz</option>
                                       <option value="L">L</option>
@@ -221,10 +232,11 @@
                                       <option value="Dozen">Dozen</option>
                                       <option value="Count">Count</option>
                                     </select>
-                                    <button type="submit" form="updateForm-{{ingredient.ingredientID}}" value="Update" class="btn btn-primary btn-sm" style="height: 2rem;">Update</button>
+                                    <button type="submit" form="updateForm-{{ingredient._id}}" value="Update" class="btn btn-primary btn-sm"
+                                      style="height: 2rem;">Update</button>
                                   </div>
                               </form>
-                              <a href="/delete-ingredient/?ingID={{ingredient.ingredientID}}" class="btn btn-danger btn-sm m-1">Delete</a>
+                              <a href="/delete-ingredient/?ingID={{ingredient._id}}" class="btn btn-danger btn-sm m-1">Delete</a>
                             </div>
                           </div>
                         </div>
@@ -240,7 +252,7 @@
 
     </div>
     <div class="addItems">
-        <form action="/add-ingridient?fid={{fridge._id}}" id="ingridientform">
+        <form action="/add-ingredient?fid={{fridge._id}}" id="ingredientform">
             <h3>Add New Item</h3>
 
             <label for="item">Item:</label>
@@ -270,7 +282,7 @@
             <br>
 
             <label for="location">Location:</label>
-            <select id="location" name="location">
+            <select id="location" name="location" required>
                 <option value="" disabled selected hidden>Select a Location</option>
                 <option value="fridge">Fridge</option>
                 <option value="fridge-door">Fridge Door</option>
@@ -278,7 +290,7 @@
                 <option value="freezer-door">Freezer Door</option>
             </select>
 
-            <button form="ingridientform" type="submit" id="submit" class="btn btn-primary">Add</button>
+            <button form="ingredientform" type="submit" id="submit" class="btn btn-primary">Add</button>
 
         </form>
 
