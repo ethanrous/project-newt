@@ -18,12 +18,15 @@
                     {% if ingredient.location == "freezer"%}
 
                     <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading{{ingredient.ingredientID}}">
-                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ingredient.ingredientID}}" aria-expanded="false" aria-controls="collapse{{ingredient.ingredientID}}">
-                            {{ingredient.ingredientName}} | {{ingredient.ingredientQuatity}} {{ingredient.quantityUnits}} | Exp. {{ingredient.ingredientExpirationDate}}
+                        <h2 class="accordion-header" id="heading{{ingredient._id}}">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse{{ingredient._id}}" aria-expanded="false" aria-controls="collapse{{ingredient._id}}">
+                            {{ingredient.name}} | {{ingredient.quatity}} {{ingredient.quantityUnits}} | Exp.
+                            {{ingredient.expirationDate}}
                           </button>
                         </h2>
-                        <div id="collapse{{ingredient.ingredientID}}" class="accordion-collapse collapse" aria-labelledby="heading{{ingredient.ingredientID}}" data-bs-parent="#accordionExample">
+                        <div id="collapse{{ingredient._id}}" class="accordion-collapse collapse" aria-labelledby="heading{{ingredient._id}}"
+                          data-bs-parent="#accordionExample">
                           <div class="accordion-body">
                             {% if ingredient.nutrition %}
                             <p>Calories: {{ingredient.nutrition.calories}}</p>
@@ -33,7 +36,7 @@
                             <p>Total Carbs.: {{ingredient.nutrition.carbohydrates_total_g}}g</p>
                             <p>Protein: {{ingredient.nutrition.protein_g}}g</p>
                             {% else %}
-                            <p>Unable to get nutrition data for "{{ingredient.ingredientName}}"</p>
+                            <p>Unable to get nutrition data for "{{ingredient.name}}"</p>
                             {% endif %}
                           </div>
                         </div>
@@ -52,12 +55,15 @@
                     {% for ingredient in ingridients %}
                     {% if ingredient.location == "fridge"%}
                     <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading{{ingredient.ingredientID}}">
-                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ingredient.ingredientID}}" aria-expanded="false" aria-controls="collapse{{ingredient.ingredientID}}">
-                            {{ingredient.ingredientName}} | {{ingredient.ingredientQuatity}} {{ingredient.quantityUnits}} | Exp. {{ingredient.ingredientExpirationDate}}
+                        <h2 class="accordion-header" id="heading{{ingredient._id}}">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse{{ingredient._id}}" aria-expanded="false" aria-controls="collapse{{ingredient._id}}">
+                            {{ingredient.name}} | {{ingredient.quatity}} {{ingredient.quantityUnits}} | Exp.
+                            {{ingredient.expirationDate}}
                           </button>
                         </h2>
-                        <div id="collapse{{ingredient.ingredientID}}" class="accordion-collapse collapse" aria-labelledby="heading{{ingredient.ingredientID}}" data-bs-parent="#accordionExample">
+                        <div id="collapse{{ingredient._id}}" class="accordion-collapse collapse" aria-labelledby="heading{{ingredient._id}}"
+                          data-bs-parent="#accordionExample">
                           <div class="accordion-body">
                             {% if ingredient.nutrition %}
                             <p>Calories: {{ingredient.nutrition.calories}}</p>
@@ -67,12 +73,12 @@
                             <p>Total Carbs.: {{ingredient.nutrition.carbohydrates_total_g}}g</p>
                             <p>Protein: {{ingredient.nutrition.protein_g}}g</p>
                             {% else %}
-                            <p>Unable to get nutrition data for "{{ingredient.ingredientName}}"</p>
+                            <p>Unable to get nutrition data for "{{ingredient.name}}"</p>
                             {% endif %}
                             <div>
                               <form id="updateForm" action="/update-ingredient/" method="POST">
                                   <div class="input-group input-group-sm">
-                                    <input id="ingID" type="text" name="ingID"  value="{{ingredient.ingredientID}}" style="visibility: hidden; display: none;">
+                                    <input id="ingID" type="text" name="ingID" value="{{ingredient._id}}" style="visibility: hidden; display: none;">
                                     <input id="quantVal" name="quantVal" type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
                                     <select id="quantType" name="quantType" class="form-select form-select-sm" aria-label=".form-select-sm example" required>
                                       <option value="Lbs">Lbs</option>
@@ -86,7 +92,7 @@
                                     <button type="submit" form="updateForm" value="Update" class="btn btn-primary btn-sm" style="height: 2rem;">Update</button>
                                   </div>
                               </form>
-                              <a href="/delete-ingredient/?ingID={{ingredient.ingredientID}}" class="btn btn-danger btn-sm m-1">Delete</a>
+                              <a href="/delete-ingredient/?ingID={{ingredient._id}}" class="btn btn-danger btn-sm m-1">Delete</a>
                             </div>
                           </div>
                         </div>
@@ -106,14 +112,17 @@
                     {% for ingredient in ingridients %}
                     {% if ingredient.location == "freezer-door"%}
                     <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading{{ingredient.ingredientID}}">
-                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ingredient.ingredientID}}" aria-expanded="false" aria-controls="collapse{{ingredient.ingredientID}}">
-                            {{ingredient.ingredientName}} | {{ingredient.ingredientQuatity}} {{ingredient.quantityUnits}} | Exp. {{ingredient.ingredientExpirationDate}}
+                        <h2 class="accordion-header" id="heading{{ingredient._id}}">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse{{ingredient._id}}" aria-expanded="false" aria-controls="collapse{{ingredient._id}}">
+                            {{ingredient.name}} | {{ingredient.quatity}} {{ingredient.quantityUnits}} | Exp.
+                            {{ingredient.expirationDate}}
                           </button>
                         </h2>
-                        <div id="collapse{{ingredient.ingredientID}}" class="accordion-collapse collapse" aria-labelledby="heading{{ingredient.ingredientID}}" data-bs-parent="#accordionExample">
+                        <div id="collapse{{ingredient._id}}" class="accordion-collapse collapse" aria-labelledby="heading{{ingredient._id}}"
+                          data-bs-parent="#accordionExample">
                           <div class="accordion-body">
-                            
+
                             {% if ingredient.nutrition %}
                             <p>Calories: {{ingredient.nutrition.calories}}</p>
                             <p>Total Fat: {{ingredient.nutrition.fat_total_g}}g</p>
@@ -122,7 +131,7 @@
                             <p>Total Carbs.: {{ingredient.nutrition.carbohydrates_total_g}}g</p>
                             <p>Protein: {{ingredient.nutrition.protein_g}}g</p>
                             {% else %}
-                            <p>Unable to get nutrition data for "{{ingredient.ingredientName}}"</p>
+                            <p>Unable to get nutrition data for "{{ingredient.name}}"</p>
                             {% endif %}
                           </div>
                         </div>
@@ -140,13 +149,16 @@
                     {% for ingredient in ingridients %}
                     {% if ingredient.location == "fridge-door"%}
                     <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading{{ingredient.ingredientID}}">
-                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ingredient.ingredientID}}" aria-expanded="false" aria-controls="collapse{{ingredient.ingredientID}}">
-                            {{ingredient.ingredientName}} | {{ingredient.ingredientQuatity}} {{ingredient.quantityUnits}} | Exp. {{ingredient.ingredientExpirationDate}}
+                        <h2 class="accordion-header" id="heading{{ingredient._id}}">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse{{ingredient._id}}" aria-expanded="false" aria-controls="collapse{{ingredient._id}}">
+                            {{ingredient.name}} | {{ingredient.quatity}} {{ingredient.quantityUnits}} | Exp.
+                            {{ingredient.expirationDate}}
                           </button>
                         </h2>
-                        <div id="collapse{{ingredient.ingredientID}}" class="accordion-collapse collapse" aria-labelledby="heading{{ingredient.ingredientID}}" data-bs-parent="#accordionExample">
-                          <div class="accordion-body">                            
+                        <div id="collapse{{ingredient._id}}" class="accordion-collapse collapse" aria-labelledby="heading{{ingredient._id}}"
+                          data-bs-parent="#accordionExample">
+                          <div class="accordion-body">
                             {% if ingredient.nutrition %}
                             <p>Calories: {{ingredient.nutrition.calories}}</p>
                             <p>Total Fat: {{ingredient.nutrition.fat_total_g}}g</p>
@@ -155,11 +167,11 @@
                             <p>Total Carbs.: {{ingredient.nutrition.carbohydrates_total_g}}g</p>
                             <p>Protein: {{ingredient.nutrition.protein_g}}g</p>
                             {% else %}
-                            <p>Unable to get nutrition data for "{{ingredient.ingredientName}}"</p>
+                            <p>Unable to get nutrition data for "{{ingredient.name}}"</p>
                             {% endif %}
                           </div>
                         </div>
-                        
+
                     </div>
                     {% endif %}
                     {% endfor %}
@@ -235,11 +247,11 @@
           </ul>
         </div>
 
-        
+
         {% endif %}
 
 
-        
+
 
         <!-- Delete Fridge Modal -->
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

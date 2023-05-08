@@ -3,12 +3,9 @@ import os
 import random
 import string
 
-import dotenv
 import pymongo
+from bson.objectid import ObjectId
 import requests
-
-dotenv.load_dotenv()
-
 
 # Schema:
 """     {                                    """
@@ -23,16 +20,17 @@ dotenv.load_dotenv()
 """             "id": "",                    """
 """             "owner_id": "",              """
 """             "collaborators":["ids"],     """
-"""             "ingridients": [{            """
-"""                 "id": 0,                 """
-"""                 "name": "",              """
-"""                 "expiration_date": "",   """
-"""                 "dateAdded": "",         """
-"""                 "quatity": ""            """
-"""                 "location": ""           """
-"""             }]                           """
+"""             "ingridients": ["ids"]       """
 """         },                               """
 """         "ingridients": {                 """
+"""             "id": 0,                     """
+"""             "name": "",                  """
+"""             "expiration_date": "",       """
+"""             "dateAdded": "",             """
+"""             "quatity": ""                """
+"""             "location": ""               """
+"""         }                                """
+"""         "nutritionCache": {              """
 """             "name":"",                   """
 """             "aliases": [""],             """
 """             "nutrition": {}              """
@@ -40,17 +38,21 @@ dotenv.load_dotenv()
 """     }                                    """
 """                                          """
 
-
 class newtdb:
     pass
 
     def __init__(self):
-        mongoClient = pymongo.MongoClient("mongodb://localhost:27017/")
+        mongoURL = os.getenv('MONGO_URL') # ex. mongodb://localhost:27017/
+        mongoClient = pymongo.MongoClient(mongoURL)
+
         self.mongoNewt = mongoClient["newtdb"]
 
         self.userscol = self.mongoNewt["users"]
         self.fridgescol = self.mongoNewt["fridges"]
         self.ingredientscol = self.mongoNewt["ingredients"]
+        self.nutritioncol = self.mongoNewt["nutritionCache"]
+
+        self.nutritionApiKey = os.getenv('NUTRITION_API_KEY')
 
     ##############################
     ### HIGHER LEVEL ENDPOINTS ###
@@ -65,23 +67,6 @@ class newtdb:
     def unshareFridgeWithUser(self, userID, fridgeID):
         self.removeSharedFridgeFromUser(userID=userID, fridgeID=fridgeID)
         self.removeUserFromFridge(userID=userID, fridgeID=fridgeID)
-
-    def getAllIngredientsByUserID(self, userID):
-        usersFridges = self.getOwnedFridgesByUserID(userID)
-        usersFridges.extend(self.getCollabFridgesByUserID(userID))
-
-        ingredients = []
-        for fridge in usersFridges:
-            fridgeName = self.getFridgeData(fridgeID=fridge)['fridgeName']
-            for ingredient in self.getIngredientsInFridge(fridgeID=fridge):
-                ingredient['fridgeName'] = fridgeName
-                ingredients.append(ingredient)
-
-        ingredients = sorted(ingredients, key=lambda ing : ing['ingredientExpirationDate'], reverse=False)
-
-        print(ingredients)
-
-        return ingredients
 
     #############
     ### USERS ###
@@ -189,48 +174,35 @@ class newtdb:
             { "$pull": { "collaborators": userID } }
         )
 
-    def addIngredientToFridge(self, fridgeID, ingredientName, ingredientExpirationDate, ingredientQuatity, quantityUnits, location):
-        while True:
-            newIngredientID = random.randint(1, 1000)
-            possibleCollision = self.fridgescol.aggregate( [ {"$match": { "_id": fridgeID, 'ingredients.ingredientID': newIngredientID } }, { "$unwind": { "path": "$ingredients" } } ] )
-            if len(list(possibleCollision)) == 0:
-                break
-
-        ingredientData = {
-            "ingredientID": newIngredientID,
-            "ingredientName": ingredientName,
-            "ingredientExpirationDate": ingredientExpirationDate,
-            "dateAdded": datetime.date.today().strftime("%Y-%m-%d"),
-            "ingredientQuatity": ingredientQuatity,
-            "quantityUnits": quantityUnits, # Count, lbs, gallons, etc.
-            "location": location
-        }
-
+    def addIngredientToFridge(self, fridgeID, newIngredientID):
         self.fridgescol.update_one(
             { "_id": fridgeID },
-            { "$push": { "ingredients": ingredientData } }
+            { "$push": { "ingredients": newIngredientID } }
         )
 
-    def updateIngredient(self, fridgeID, ingredientID, newQuantity, newUnits):
-        ingredientData = list(self.fridgescol.aggregate( [ { "$unwind": { "path": "$ingredients" } }, {"$match": { "_id": fridgeID, 'ingredients.ingredientID': ingredientID } } ] ) )[0]['ingredients']
-        ingredientData['ingredientQuatity'] = newQuantity
-        ingredientData['quantityUnits'] = newUnits
-
-        self.removeIngredientFromFridge(fridgeID, ingredientID)
-
+    def updateIngredient(self, ingredientID, newQuantity, newUnits):
         self.fridgescol.update_one(
-            { "_id": fridgeID },
-            { "$push": { "ingredients": ingredientData } }
+            { "_id": ingredientID },
+            { "$set": { "quatity": newQuantity } },
+            { "$set": { "quatityUnits": newUnits } }
         )
 
     def removeIngredientFromFridge(self, fridgeID, ingredientID):
         self.fridgescol.update_one(
             { "_id": fridgeID },
-            { "$pull": { "ingredients": { "ingredientID": ingredientID } } }
+            { "$pull": { "ingredients": ingredientID } }
         )
 
     def getIngredientsInFridge(self, fridgeID):
-        return sorted(self.fridgescol.find_one( { "_id": fridgeID }, { "_id": 0, "ingredients": 1 } )['ingredients'], key=lambda ing : ing['ingredientName'])
+        ingredientIDs = self.fridgescol.find_one( { "_id": fridgeID }, { "_id": 0, "ingredients": 1 } )['ingredients']
+        ingredientIDs = list(map(lambda x : ObjectId(x), ingredientIDs))
+
+        ingData = list(self.ingredientscol.find( {"_id": { "$in": ingredientIDs } } ) )
+
+        for ing in ingData:
+            ing["_id"] = str(ing["_id"])
+
+        return ingData
 
     def doesUserOwnFridge(self, fridgeID, userID):
         fridgeOwner = self.fridgescol.find_one( { "_id": fridgeID }, { "ownerID": 1 } )
@@ -259,19 +231,41 @@ class newtdb:
         self.fridgescol.drop()
         self.fridgescol = self.mongoNewt["fridges"]
 
+
     ###################
     ### INGREDIENTS ###
     ###################
 
+    def newIngredient(self, name, expirationDate, quatity, quantityUnits, location):
+        newIngredientData = {
+            "name": name,
+            "expirationDate": expirationDate,
+            "dateAdded": datetime.date.today().strftime("%Y-%m-%d"),
+            "quatity": quatity,
+            "quantityUnits": quantityUnits, # Count, lbs, gallons, etc.
+            "location": location
+        }
+        return str(self.ingredientscol.insert_one(newIngredientData).inserted_id)
+
+    # CAUTION - THIS DELETES ALL INGREDIENTS IN THE DATABASE
+    def dropIngredients(self):
+        self.ingredientscol.drop()
+        self.ingredientscol = self.mongoNewt["ingredients"]
+
+
+    #######################
+    ### NUTRITION CACHE ###
+    #######################
+
     def getIngredientDataFromName(self, ingredientName):
 
-        ingredientData = self.ingredientscol.find_one( { "aliases": ingredientName } )
+        ingredientData = self.nutritioncol.find_one( { "aliases": ingredientName } )
 
         if ingredientData == None:
 
             foodApiUrl = "https://nutrition-by-api-ninjas.p.rapidapi.com/v1/nutrition"
             foodApiHeaders = {
-                "X-RapidAPI-Key": os.getenv('apiKey'),
+                "X-RapidAPI-Key": self.nutritionApiKey,
                 "X-RapidAPI-Host": "nutrition-by-api-ninjas.p.rapidapi.com"
             }
 
@@ -281,27 +275,27 @@ class newtdb:
             res = requests.request("GET", foodApiUrl, headers=foodApiHeaders, params=querystring).json()
 
             if res == []:
-                if not self.ingredientscol.find_one( { "name": "NO-RES" } ):
+                if not self.nutritioncol.find_one( { "name": "NO-RES" } ):
                     newIngredientData = {
                         "name": "NO-RES",
                         "aliases": [],
                         "nutrition": None
                     }
-                    self.ingredientscol.insert_one(newIngredientData)
+                    self.nutritioncol.insert_one(newIngredientData)
 
-                self.ingredientscol.update_one(
+                self.nutritioncol.update_one(
                     { "name": "NO-RES" },
                     { "$push": { "aliases": ingredientName } }
                 )
-                return None
+                return None, None
 
             apiIngredientData = res[0]
             apiIngredientName = apiIngredientData['name']
 
             del apiIngredientData['name']
 
-            if self.ingredientscol.find_one( { "name": apiIngredientName } ):
-                self.ingredientscol.update_one(
+            if self.nutritioncol.find_one( { "name": apiIngredientName } ):
+                self.nutritioncol.update_one(
                     { "name": apiIngredientName },
                     { "$push": { "aliases": ingredientName } }
                 )
@@ -311,7 +305,7 @@ class newtdb:
                     "aliases": [ingredientName],
                     "nutrition": apiIngredientData
                 }
-                self.ingredientscol.insert_one(newIngredientData)
+                self.nutritioncol.insert_one(newIngredientData)
             ingredientData = apiIngredientData
             cleanIngredientName = apiIngredientName
 
@@ -323,14 +317,10 @@ class newtdb:
             cleanIngredientName = ingredientData['name']
             ingredientData = ingredientData['nutrition']
 
-        return ingredientData
+        return cleanIngredientName, ingredientData
 
-    # CAUTION - THIS DELETES ALL INGREDIENTS IN THE DATABASE
-    def dropIngredents(self):
-        self.ingredientscol.drop()
-        self.ingredientscol = self.mongoNewt["ingredients"]
+    # CAUTION - THIS DELETES ALL NUTRITION CACHE DATA IN THE DATABASE
+    def dropNutritionCache(self):
+        self.nutritioncol.drop()
+        self.nutritioncol = self.mongoNewt["nutritionCache"]
 
-
-
-## TODO ##
-# Get soon to expire ingredients

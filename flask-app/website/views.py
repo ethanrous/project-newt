@@ -67,7 +67,8 @@ def fridge():
 
     ingridients = dbobj.getIngredientsInFridge(fridgeID=fid)
     for ingridient in ingridients:
-        ingridient['nutrition'] = dbobj.getIngredientDataFromName(ingredientName=ingridient['ingredientName'])
+        _, ingridient['nutrition'] = dbobj.getIngredientDataFromName(ingredientName=ingridient['name'])
+    print(f"HERE: {ingridients}")
 
     return render_template('fridge.html', ingridients=ingridients, fridge=dbobj.getFridgeData(fridgeID=fid), collaborators=collaboratorsContactInfo, isOwner=dbobj.doesUserOwnFridge(fid, session['google_id']))
 
@@ -78,7 +79,8 @@ def add_ingridient():
     itemName, quatityVal, quantityType, expDate, location = request.args.get("item"), request.args.get("quantityValue"), request.args.get("quantityType"), request.args.get("expiration-date"), request.args.get("location")
 
     fid = session["currFridge"]
-    dbobj.addIngredientToFridge(fridgeID=fid, ingredientName=itemName, ingredientExpirationDate=expDate, ingredientQuatity=quatityVal, quantityUnits=quantityType, location=location)
+    newIngredientID = dbobj.newIngredient(itemName, expDate, quatityVal, quantityType, location)
+    dbobj.addIngredientToFridge(fridgeID=fid, newIngredientID=newIngredientID)
 
     return redirect(f"/fridge/?fid={fid}")
 

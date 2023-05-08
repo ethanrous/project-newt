@@ -6,11 +6,12 @@ def main():
     userEmail = "ethrous@bu.edu"
 
     dbobj = database.newtdb()
-    x, y = 1, 2
-    print(x)
-    #dbobj.dropUsers()
-    #dbobj.dropFridges()
-    #dbobj.dropIngredents()
+
+    dbobj.dropUsers()
+    dbobj.dropFridges()
+    dbobj.dropIngredients()
+
+    dbobj.newIngredient("Apple", "2023-01-01", 1, "Count", "Freezer")
     return
     userID = dbobj.getUserIDFromEmail(userEmail)
     fridges = dbobj.getOwnedFridgesByUserID(userID=userID)
