@@ -1,3 +1,5 @@
+import time
+
 from itertools import chain
 
 from flask import (Blueprint, Flask, abort, flash, redirect, render_template,
@@ -12,6 +14,8 @@ def login_is_required(function):
     def wrapper(*args, **kwargs):
         if "google_id" not in session:
             return abort(401)  # Authorization required
+        elif not dbobj.doesUserExist(session['google_id']):
+            return redirect('/')
         else:
             return function()
     wrapper.__name__ = function.__name__
@@ -45,9 +49,9 @@ def settings():
 @views.route("/notifications")
 @login_is_required
 def notifications():
-    allIngridients = dbobj.getAllIngredientsByUserID(userID=session['google_id'])
+    allingredients = dbobj.getAllIngredientsByUserID(userID=session['google_id'])
 
-    return render_template('notifications.html', ingridients=allIngridients)
+    return render_template('notifications.html', ingredients=allingredients)
 
 @views.route("/recipes", methods=['GET'])
 @login_is_required
@@ -65,20 +69,21 @@ def fridge():
     session["currFridge"] = fid
     collaboratorsContactInfo = list(filter(lambda item: item is not None, [dbobj.getUserContactByUserID(c) for c in dbobj.getFridgeCollaborators(fridgeID=fid)]))
 
-    ingridients = dbobj.getIngredientsInFridge(fridgeID=fid)
-    for ingridient in ingridients:
-        ingridient['nutrition'] = dbobj.getIngredientDataFromName(ingredientName=ingridient['ingredientName'])
+    ingredients = dbobj.getIngredientsInFridge(fridgeID=fid)
 
-    return render_template('fridge.html', ingridients=ingridients, fridge=dbobj.getFridgeData(fridgeID=fid), collaborators=collaboratorsContactInfo, isOwner=dbobj.doesUserOwnFridge(fid, session['google_id']))
+    for ingredient in ingredients:
+        ingredient['nutrition'] = dbobj.getIngredientDataFromID(ingredientID=ingredient['nutritionID'])['nutrition']
 
+    return render_template('fridge.html', ingredients=ingredients, fridge=dbobj.getFridgeData(fridgeID=fid), collaborators=collaboratorsContactInfo, isOwner=dbobj.doesUserOwnFridge(fid, session['google_id']))
 
-@views.route("/add-ingridient", methods=['POST', 'GET'])
+@views.route("/add-ingredient", methods=['POST', 'GET'])
 @login_is_required
-def add_ingridient():
+def add_ingredient():
     itemName, quatityVal, quantityType, expDate, location = request.args.get("item"), request.args.get("quantityValue"), request.args.get("quantityType"), request.args.get("expiration-date"), request.args.get("location")
 
     fid = session["currFridge"]
-    dbobj.addIngredientToFridge(fridgeID=fid, ingredientName=itemName, ingredientExpirationDate=expDate, ingredientQuatity=quatityVal, quantityUnits=quantityType, location=location)
+    newIngredientID = dbobj.newIngredient(itemName, expDate, quatityVal, quantityType, location)
+    dbobj.addIngredientToFridge(fridgeID=fid, newIngredientID=newIngredientID)
 
     return redirect(f"/fridge/?fid={fid}")
 
@@ -94,7 +99,6 @@ def share_fridge():
 
     return redirect(f"/fridge/?fid={fid}")
 
-
 @views.route("/unshare-fridge/", methods=['GET','POST'])
 @login_is_required
 def unshare_fridge():
@@ -108,14 +112,12 @@ def unshare_fridge():
 
     return redirect(f"/fridge/?fid={fid}")
 
-
 @views.route("/delete-fridge", methods=['GET','POST'])
 @login_is_required
 def delete_fridge():
     fid = session['currFridge']
     dbobj.deleteFridge(fid, session['google_id'])
     return redirect("/home")
-
 
 @views.route("/change-name", methods=['GET','POST'])
 @login_is_required
@@ -130,19 +132,18 @@ def change_name():
 def delete_ingredient():
     fid = session['currFridge']
     ingID = request.args.get('ingID')
-    dbobj.removeIngredientFromFridge(fridgeID=fid, ingredientID=int(ingID))
+    dbobj.removeIngredientFromFridge(fridgeID=fid, ingredientID=ingID)
     return redirect(f"/fridge/?fid={fid}")
-
 
 @views.route("/update-ingredient/", methods=['GET','POST'])
 @login_is_required
 def update_ingredient():
-    fid = session['currFridge']
-    ingID = int(request.args.get('ingID'))
+    ingID = request.args.get('ingID')
     quatityVal = int(request.form.get("quantVal-"+str(ingID)))
     quantityType = request.form.get("quantType-"+str(ingID))
 
-    dbobj.updateIngredient(fridgeID=fid, ingredientID=ingID, newQuantity=quatityVal, newUnits=quantityType)
+    dbobj.updateIngredient(ingredientID=ingID, newQuantity=quatityVal, newUnits=quantityType)
 
+    fid = session['currFridge']
     return redirect(f"/fridge/?fid={fid}")
 
