@@ -7,10 +7,11 @@ def main():
 
     dbobj = database.newtdb()
 
-    dbobj.dropUsers()
-    dbobj.dropFridges()
-    dbobj.dropIngredients()
-    dbobj.dropNutritionCache()
+    dbobj.isExpired("2023-05-23")
+    #dbobj.dropUsers()
+    #dbobj.dropFridges()
+    #dbobj.dropIngredients()
+    #dbobj.dropNutritionCache()
 
     return
     userID = dbobj.getUserIDFromEmail(userEmail)
