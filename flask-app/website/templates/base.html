@@ -18,7 +18,7 @@
                 <i class="fa-solid fa-box-archive"></i>MyFridge
             </div>
             <div class="list-group list-group-flush my-3">
-                
+
                 <a href="/home" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
                     <i class="fas fa-tachometer-alt me-2"></i>
                     Dashboard
@@ -36,7 +36,7 @@
 
                 <a href="/notifications" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
                     <i class="fa-solid fa-bell"></i>
-                    Notifications
+                    Notifications ({{ totalExpired }})
                 </a>
 
                 <a href="/settings" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
@@ -52,7 +52,7 @@
 
         <!-- Page Content -->
         <div id="page-content-wrapper">
-            
+
             <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
                 <div class="d-flex align-items-center">
                     <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle"></i>
@@ -66,8 +66,7 @@
                 </button>
 
             </nav>
-            
-            
+
             <div class="container-fluid px-4">
                 {% block contentTop %}
                 {% endblock %}
@@ -75,11 +74,6 @@
                 {% block contentBottom %}
                 {% endblock %}
             </div>
-
-
-
-
-            
         </div>
     </div>
     <!-- /#page-content-wrapper -->
