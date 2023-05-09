@@ -3,25 +3,66 @@
 {% block contentTitle %}Notifications{% endblock %}
 
 {% block contentBottom %}
+{% if expiredIngredients %}
 <div class="row my-5">
-    <h3 class="fs-4 mb-3">Expiration Notifications</h3>
+    <h3 class="fs-4 mb-3">Expired Ingredients</h3>
     <div class="col">
         <table class="table bg-white rounded shadow-sm  table-hover">
             <thead>
                 <tr>
-                    <th scope="col" width="50">#</th>
-                    <th scope="col">Item</th>
+                    <th scope="col" width="20"></th>
+                    <th scope="col" width="60">#</th>
+                    <th scope="col">Name</th>
                     <th scope="col">Fridge</th>
-                    <th scope="col">Date</th>
+                    <th scope="col" width="400">Expired On</th>
+                    <th scope="col" width="400">Delete Expired</th>
                 </tr>
             </thead>
             <tbody>
-
-                {% for ingredient in ingredients %}
+                {% for ingredient in expiredIngredients %}
+                <tr>
+                    <th></th>
+                    <th scope="row">{{loop.index}}</th>
+                    <td>{{ingredient.name}}</td>
+                    <td>
+                        <a href="/fridge/?fid={{ingredient.fridgeID}}"
+                            class="btn btn-primary btn-sm m-1">{{ingredient.fridgeName}}</a>
+                    </td>
+                    <td>{{ingredient.expirationDate}}</td>
+                    <td>
+                        <a href="/delete-ingredient/?ingID={{ingredient._id}}"
+                            class="btn btn-danger btn-sm m-1">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+{% if goodIngredients %}
+    <div class="row my-5">
+        <h3 class="fs-4 mb-3">Good Ingredients</h3>
+        <div class="col">
+            <table class="table bg-white rounded shadow-sm  table-hover">
+                <thead>
                     <tr>
+                    <th scope="col" width="20"></th>
+                    <th scope="col" width="60">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Fridge</th>
+                    <th scope="col" width="800">Expiration Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ingredient in goodIngredients %}
+                    <tr>
+                        <th></th>
                         <th scope="row">{{loop.index}}</th>
                         <td>{{ingredient.name}}</td>
-                        <td>{{ingredient.fridgeName}}</td>
+                        <td>
+                            <a href="/fridge/?fid={{ingredient.fridgeID}}" class="btn btn-primary btn-sm m-1">{{ingredient.fridgeName}}</a>
+                        </td>
                         <td>{{ingredient.expirationDate}}</td>
                     </tr>
                 {% endfor %}
@@ -29,4 +70,8 @@
         </table>
     </div>
 </div>
+{% else %}
+<h3 class="fs-4 mb-3">No Ingredients!</h3>
+<a href="/home" class="btn btn-primary btn-sm m-1">Add Some</a>
+{% endif %}
 {% endblock %}

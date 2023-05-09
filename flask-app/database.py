@@ -2,6 +2,7 @@ import datetime
 import os
 import random
 import string
+import time
 
 import pymongo
 from bson.objectid import ObjectId
@@ -29,6 +30,7 @@ import requests
 """             "dateAdded": "",             """
 """             "quantity": ""               """
 """             "location": ""               """
+"""             "nutritionID": ""            """
 """         }                                """
 """         "nutritionCache": {              """
 """             "name":"",                   """
@@ -122,18 +124,21 @@ class newtdb:
         else:
             return []
 
+    def getFridgesByUserID(self, userID):
+        collabs = self.getCollabFridgesByUserID(userID=userID)
+        owned = self.getOwnedFridgesByUserID(userID=userID)
+        fridges = collabs + owned
+        return fridges
+
     def getAllIngredientsByUserID(self, userID):
-        usersFridges = self.getOwnedFridgesByUserID(userID)
-        usersFridges.extend(self.getCollabFridgesByUserID(userID))
+        usersFridges = self.getFridgesByUserID(userID=userID)
+
+        userIngredients = self.getIngredientsInFridges(usersFridges)
 
         ingredients = []
-        for fridge in usersFridges:
-            fridgeName = self.getFridgeData(fridgeID=fridge)['fridgeName']
-            for ingredient in self.getIngredientsInFridge(fridgeID=fridge):
-                ingredient['fridgeName'] = fridgeName
-                ingredients.append(ingredient)
-
-        ingredients = sorted(ingredients, key=lambda ing : ing['expirationDate'], reverse=False)
+        for ingredient in userIngredients:
+            ingredient['fridgeName'] = self.getFridgeData(fridgeID=ingredient["fridgeID"])['fridgeName']
+            ingredients.append(ingredient)
 
         return ingredients
 
@@ -148,12 +153,6 @@ class newtdb:
 
     def updateUserName(self, userID, newName):
         self.userscol.update_one( {"_id": userID }, { "$set": { "name": newName } } )
-
-    def getFridgesByUserID(self, userID):
-        collabs = self.getCollabFridgesByUserID(userID=userID)
-        owned = self.getOwnedFridgesByUserID(userID=userID)
-        fridges = collabs + owned
-        return fridges
 
     # CAUTION - THIS DELETES ALL USERS IN THE DATABASE
     def dropUsers(self):
@@ -201,11 +200,24 @@ class newtdb:
         )
         self.deleteIngredient(ingredientID)
 
-    def getIngredientsInFridge(self, fridgeID):
+    def getIngredientsInFridge(self, fridgeID: str):
         ingredientIDs = self.fridgescol.find_one( { "_id": fridgeID }, { "_id": 0, "ingredients": 1 } )['ingredients']
         ingredientIDs = list(map(lambda x : ObjectId(x), ingredientIDs))
 
-        ingData = list(self.ingredientscol.find( {"_id": { "$in": ingredientIDs } } ) )
+        ingData = list(self.ingredientscol.find( {"_id": { "$in": ingredientIDs } } ).sort("expirationDate") )
+
+        for ing in ingData:
+            ing["_id"] = str(ing["_id"])
+
+        return ingData
+
+    def getIngredientsInFridges(self, fridgeIDs: list):
+        ingredientIDs = []
+        for fridge in list(self.fridgescol.find( { "_id": { "$in": fridgeIDs} }, { "_id": 0, "ingredients": 1 } ) ):
+            ingredientIDs.extend(fridge['ingredients'])
+        ingredientIDs = list(map(lambda x : ObjectId(x), ingredientIDs))
+
+        ingData = list(self.ingredientscol.find( {"_id": { "$in": ingredientIDs } } ).sort("expirationDate") )
 
         for ing in ingData:
             ing["_id"] = str(ing["_id"])
@@ -244,9 +256,10 @@ class newtdb:
     ### INGREDIENTS ###
     ###################
 
-    def newIngredient(self, name, expirationDate, quantity, quantityUnits, location):
+    def newIngredient(self, fridgeID, name, expirationDate, quantity, quantityUnits, location):
         newIngredientData = {
             "name": name,
+            "fridgeID": fridgeID,
             "expirationDate": expirationDate,
             "dateAdded": datetime.date.today().strftime("%Y-%m-%d"),
             "quantity": quantity,
@@ -262,6 +275,17 @@ class newtdb:
             { "_id": ingredientID },
             { "$set": { "quantity": newQuantity, "quantityUnits": newUnits } },
         )
+
+    def isExpired(self, expireDate):
+        return not datetime.datetime.strptime(expireDate, "%Y-%m-%d") > datetime.datetime.today()
+
+    def getTotalExpired(self, userID):
+        ingredients = self.getAllIngredientsByUserID(userID=userID)
+        count = 0
+        for ingredient in ingredients:
+            if self.isExpired(ingredient['expirationDate']):
+                count += 1
+        return count
 
     def deleteIngredient(self, ingredientID):
         ingredientID = ObjectId(ingredientID)
